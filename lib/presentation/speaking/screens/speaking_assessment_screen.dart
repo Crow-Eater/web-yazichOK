@@ -20,6 +20,7 @@ class SpeakingAssessmentScreen extends StatelessWidget {
       ),
       body: BlocBuilder<SpeechCubit, SpeechState>(
         builder: (context, state) {
+          print('DEBUG: AssessmentScreen building with state: ${state.runtimeType}');
           if (state is SpeechAssessmentProcessing) {
             return Center(
               child: Column(

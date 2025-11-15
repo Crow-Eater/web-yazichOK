@@ -111,21 +111,29 @@ class SpeechCubit extends Cubit<SpeechState> {
 
   /// Submit recording for assessment
   Future<void> submitRecording() async {
-    if (_currentTopic == null || _currentAudioUrl == null) return;
+    if (_currentTopic == null || _currentAudioUrl == null) {
+      print('DEBUG: submitRecording called but no topic or audio URL');
+      return;
+    }
 
     try {
+      print('DEBUG: submitRecording called, emitting SpeechAssessmentProcessing');
       emit(SpeechAssessmentProcessing(_currentTopic!));
 
       // Simulate processing delay
+      print('DEBUG: Waiting 2 seconds...');
       await Future.delayed(const Duration(seconds: 2));
 
+      print('DEBUG: Calling assessRecording on repository');
       final result = await _networkRepository.assessRecording(
         _currentAudioUrl!,
         _currentTopic!.id,
       );
 
+      print('DEBUG: Got result, emitting SpeechAssessmentCompleted with score ${result.overallScore}');
       emit(SpeechAssessmentCompleted(_currentTopic!, result));
     } catch (e) {
+      print('DEBUG: Error in submitRecording: $e');
       emit(SpeechError('Failed to assess recording: ${e.toString()}'));
     }
   }

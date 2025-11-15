@@ -25,9 +25,14 @@ class RecordingScreen extends StatelessWidget {
         title: const Text('Record Your Response'),
       ),
       body: BlocConsumer<SpeechCubit, SpeechState>(
+        listenWhen: (previous, current) {
+          // Only listen when transitioning TO SpeechAssessmentProcessing
+          return current is SpeechAssessmentProcessing && previous is! SpeechAssessmentProcessing;
+        },
         listener: (context, state) {
           // Navigate to assessment screen when recording is submitted
           if (state is SpeechAssessmentProcessing) {
+            print('DEBUG: Navigating to assessment screen');
             context.push(Routes.assessment);
           }
         },
