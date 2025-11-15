@@ -35,7 +35,7 @@ class _MainContent extends StatelessWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         body: Row(
           children: [
             // Main content
@@ -150,16 +150,16 @@ class _MainContent extends StatelessWidget {
                           level: 'Advanced',
                           readTime: '5 min read',
                           onTap: () {
-                            context.push('/articles/article-1');
+                            context.push('/articles/art-1');
                           },
                         ),
                         const SizedBox(height: 12),
                         _ArticleCard(
-                          title: 'Climate Change Solutions',
+                          title: 'Effective Study Techniques for Language Learners',
                           level: 'Intermediate',
                           readTime: '4 min read',
                           onTap: () {
-                            context.push('/articles/article-2');
+                            context.push('/articles/art-2');
                           },
                         ),
                       ]),
