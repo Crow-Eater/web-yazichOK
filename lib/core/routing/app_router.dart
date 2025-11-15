@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'route_names.dart';
 import 'placeholder_screen.dart';
 import '../../presentation/auth/screens/sign_in_screen.dart';
 import '../../presentation/auth/screens/sign_up_screen.dart';
 import '../../presentation/main/screens/main_screen.dart';
+import '../../presentation/flashcards/screens/flashcards_screen.dart';
+import '../../presentation/flashcards/screens/add_new_word_screen.dart';
+import '../../presentation/flashcards/screens/add_new_group_screen.dart';
+import '../../presentation/flashcards/screens/memorise_words_screen.dart';
+import '../../presentation/flashcards/cubit/flashcards_cubit.dart';
+import '../../presentation/flashcards/cubit/memorise_cubit.dart';
+import '../../core/di/service_locator.dart';
 
 /// Configures all app routes using go_router
 class AppRouter {
@@ -31,29 +39,40 @@ class AppRouter {
         // FlashCards
         GoRoute(
           path: Routes.flashcards,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'FlashCards',
+          builder: (context, state) => BlocProvider(
+            create: (context) => FlashCardsCubit(
+              ServiceLocator().networkRepository,
+            )..loadGroups(),
+            child: const FlashCardsScreen(),
           ),
         ),
         GoRoute(
           path: Routes.addWord,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Add Word',
+          builder: (context, state) => BlocProvider(
+            create: (context) => FlashCardsCubit(
+              ServiceLocator().networkRepository,
+            )..loadGroups(),
+            child: const AddNewWordScreen(),
           ),
         ),
         GoRoute(
           path: Routes.addGroup,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Add Group',
+          builder: (context, state) => BlocProvider(
+            create: (context) => FlashCardsCubit(
+              ServiceLocator().networkRepository,
+            ),
+            child: const AddNewGroupScreen(),
           ),
         ),
         GoRoute(
           path: Routes.memoriseWords,
           builder: (context, state) {
             final groupId = state.pathParameters['groupId'] ?? '';
-            return PlaceholderScreen(
-              routeName: 'Memorise Words',
-              params: {'groupId': groupId},
+            return BlocProvider(
+              create: (context) => MemoriseCubit(
+                ServiceLocator().networkRepository,
+              )..loadGroup(groupId),
+              child: MemoriseWordsScreen(groupId: groupId),
             );
           },
         ),
