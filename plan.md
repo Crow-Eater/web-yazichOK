@@ -7,7 +7,7 @@
 # Required Tech / Libraries (suggested)
 
 * Flutter SDK (stable) targeting web (and mobile-ready if desired).
-* State management: Provider / Riverpod / flutter_bloc (choose one — spec will use `flutter_bloc` in examples).
+* State management: **flutter_bloc** with **Cubits** (use `Cubit` and `BlocProvider` for state management, `BlocBuilder`/`BlocConsumer` for UI updates).
 * Routing: `go_router` or Navigator 2.0 with a Coordinator-like abstraction (spec uses `go_router` for simplicity with web deep links).
 * HTTP: `dio` (with an abstraction layer for mocks).
 * Audio:
@@ -18,8 +18,24 @@
 * Lottie: `lottie` package.
 * UI: Flutter widgets, responsive layout for web.
 * Testing: unit tests and widget tests; mocks via `mocktail` / `mockito`.
+* State classes: use `freezed` package for immutable state classes with code generation, or `equatable` for simpler cases.
 
 All services must be injected (DI) so mock implementations can be swapped for real implementations later.
+
+**Dependency Injection for Cubits:**
+
+* Use `BlocProvider` to provide Cubits with their dependencies (repositories, managers)
+* Example:
+  ```dart
+  BlocProvider(
+    create: (context) => FlashCardsCubit(
+      context.read<NetworkManager>(),
+    ),
+    child: FlashCardsScreen(),
+  )
+  ```
+* For app-wide services, use `MultiBlocProvider` or `RepositoryProvider` at the root level
+* Cubits receive dependencies via constructor injection
 
 ---
 
@@ -28,7 +44,7 @@ All services must be injected (DI) so mock implementations can be swapped for re
 Create a feature spec and acceptance-criteria document for developers that includes:
 
 * New UI elements and screens (names, routes, behaviors).
-* ViewModels/State classes and responsibilities.
+* Cubits/State classes and responsibilities.
 * Services/managers (interfaces + mock behavior).
 * Navigation routes (paths) for web deep links.
 * Data models for flashcards, grammar tests, audio items, users.
@@ -42,7 +58,54 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ## App-wide rules
 
-* Keep MVVM-like separation: Widget (View) ↔ ViewModel (business logic, streams/state) ↔ Repositories / Managers (network, audio, auth, storage) ↔ Models.
+* Keep clean architecture separation: Widget (View) ↔ Cubit (business logic, state management) ↔ Repositories / Managers (network, audio, auth, storage) ↔ Models.
+* Use **Cubit** pattern from `flutter_bloc`:
+  * Each feature has a `Cubit` class that extends `Cubit<StateClass>`
+  * State classes are immutable data classes (use `freezed` package or `equatable` for state classes)
+  * Cubits emit new states via `emit(newState)`
+  * UI widgets use `BlocBuilder<Cubit, State>` or `BlocConsumer<Cubit, State>` to react to state changes
+  * Use `BlocProvider` to provide Cubits to widget tree
+  * Example structure:
+    ```dart
+    // State class (using freezed or equatable)
+    class FlashCardsState extends Equatable {
+      final List<WordGroup> groups;
+      final bool isLoading;
+      final String? error;
+      // ... constructors, copyWith, etc.
+    }
+    
+    // Cubit
+    class FlashCardsCubit extends Cubit<FlashCardsState> {
+      final NetworkManager networkManager;
+      FlashCardsCubit(this.networkManager) : super(FlashCardsInitial());
+      
+      Future<void> loadGroups() async {
+        emit(FlashCardsLoading());
+        try {
+          final groups = await networkManager.getFlashcardGroups();
+          emit(FlashCardsLoaded(groups));
+        } catch (e) {
+          emit(FlashCardsError(e.toString()));
+        }
+      }
+    }
+    
+    // UI Widget
+    BlocBuilder<FlashCardsCubit, FlashCardsState>(
+      builder: (context, state) {
+        if (state is FlashCardsLoading) return CircularProgressIndicator();
+        if (state is FlashCardsError) return Text(state.message);
+        if (state is FlashCardsLoaded) {
+          return ListView.builder(
+            itemCount: state.groups.length,
+            itemBuilder: (context, i) => GroupItem(state.groups[i]),
+          );
+        }
+        return SizedBox.shrink();
+      },
+    )
+    ```
 * Use `go_router` (or Navigator 2.0) so each screen has a meaningful URL path. Example paths:
 
   * `/` → main screen
@@ -56,6 +119,13 @@ Create a feature spec and acceptance-criteria document for developers that inclu
   * `/learn/listening` → ListeningPractice
   * `/auth/signin` → Sign In
   * `/auth/signup` → Sign Up
+  * `/speaking/topics` → Speaking Topics
+  * `/speaking/recording` → Recording
+  * `/speaking/assessment` → Speaking Assessment
+  * `/speaking/results` → Speaking Results
+  * `/articles` → Articles Preview
+  * `/articles/:articleId` → Article
+  * `/articles/:articleId/analysis` → Article Analysis
 * All network calls are mocked through a `NetworkRepository` interface. Provide `MockNetworkRepository` that returns deterministic data; replaceable by `HttpNetworkRepository` later.
 * All audio is loaded from local assets initially; use `AudioRepository` interface for future remote switching.
 
@@ -63,10 +133,49 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ## Naming convention for widgets / files (suggested)
 
-* Screens / Pages (widgets): `MainScreen`, `FlashCardsScreen`, `AddNewWordScreen`, `AddNewGroupScreen`, `MemoriseWordsScreen`, `LearnScreen`, `GrammarTopicsScreen`, `TestScreen`, `ListeningPracticeScreen`, `SignInScreen`, `SignUpScreen`, `ArticlesPreviewScreen`, `ArticleScreen`, `ArticleAnalysisScreen`, `SpeakingTopicsScreen`, `RecordingScreen`, `SpeakingAssessmentScreen`.
-* ViewModels: `MainViewModel`, `FlashCardsViewModel`, `MemoriseViewModel`, `LearnViewModel`, `TestViewModel`, `ListeningViewModel`, `AuthViewModel`, `ArticlesViewModel`, `SpeechViewModel`.
+* Screens / Pages (widgets): `MainScreen`, `FlashCardsScreen`, `AddNewWordScreen`, `AddNewGroupScreen`, `MemoriseWordsScreen`, `LearnScreen`, `GrammarTopicsScreen`, `TestScreen`, `ListeningPracticeScreen`, `SignInScreen`, `SignUpScreen`, `ArticlesPreviewScreen`, `ArticleScreen`, `ArticleAnalysisScreen`, `SpeakingTopicsScreen`, `RecordingScreen`, `SpeakingAssessmentScreen`, `SpeakingResultsScreen`.
+* Cubits: `MainCubit`, `FlashCardsCubit`, `MemoriseCubit`, `LearnCubit`, `TestCubit`, `ListeningCubit`, `AuthCubit`, `ArticlesCubit`, `SpeechCubit`.
+* State classes: `MainState`, `FlashCardsState`, `MemoriseState`, `LearnState`, `TestState`, `ListeningState`, `AuthState`, `ArticlesState`, `SpeechState` (each with sub-states like `Initial`, `Loading`, `Loaded`, `Error`).
 * Repositories/Managers: `NetworkManager` (interface), `MockNetworkManager`, `AudioManager` (interface), `LocalAudioManager`, `RecorderManager` (interface), `WebRecorderManager`, `AuthManager` (interface), `MockAuthManager`.
-* Models: `WordGroup`, `FlashCard`, `GrammarTopic`, `Question`, `AnswerOption`, `AudioRecord`, `User`.
+* Models: `WordGroup`, `FlashCard`, `GrammarTopic`, `Question`, `AnswerOption`, `AudioRecord`, `User`, `SpeakingTopic`, `AssessmentResult`, `Article`, `ArticleAnalysis`, `VocabularyItem`, `GrammarPoint`.
+
+---
+
+# Main Screen
+
+### MainScreen (route `/`)
+
+**Design reference:** `screen_shots/Main screen.png`
+
+**UI Structure**
+
+* Main content area displaying various learning modules and features
+* Navigation elements to access different sections of the app
+* **Purple UI element** (Flash Cards card/button):
+  * Prominent visual element matching the design in screenshot
+  * Tapping opens route `/flashcards`
+* Other feature cards/buttons (if present in design):
+  * Each card represents a different learning module
+  * Cards should be visually distinct and tappable
+* App bar or header:
+  * May include app title/logo
+  * User profile/account access (if authenticated)
+  * Settings or menu button (optional)
+
+**Behavior**
+
+* Screen serves as the main entry point after authentication
+* All navigation cards should be clearly visible and accessible
+* Responsive layout for web (centered content, appropriate spacing)
+* Navigation should be intuitive and match the visual design
+
+**State Management**
+
+* `MainCubit` handles:
+  * User session state
+  * Navigation state
+  * Feature availability flags
+  * Emits `MainState` with sub-states: `MainInitial`, `MainLoaded`, `MainError`
 
 ---
 
@@ -92,7 +201,8 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 **Data**
 
-* `FlashCardsViewModel` provides `List<WordGroup>` via stream or state notifier.
+* `FlashCardsCubit` manages `FlashCardsState` which contains `List<WordGroup>`.
+  * State: `FlashCardsInitial`, `FlashCardsLoading`, `FlashCardsLoaded(groups)`, `FlashCardsError(message)`
 * Groups and words are stored in-memory for the mock with the ability to persist (e.g., local `shared_preferences`) later.
 
 ### AddNewWordScreen (`/flashcards/add-word`)
@@ -108,7 +218,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 * Save button:
 
   * Validates required fields.
-  * Adds the word to the selected group via `FlashCardsViewModel.addWord`.
+  * Adds the word to the selected group via `FlashCardsCubit.addWord(groupId, word)`.
   * On success, return to `/flashcards` or the group screen.
 
 ### AddNewGroupScreen (`/flashcards/add-group`)
@@ -116,7 +226,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 **UI**
 
 * Single text field to input group name.
-* Save button: validates non-empty name, calls `FlashCardsViewModel.addGroup`, then navigates back to `/flashcards` and updates UI.
+* Save button: validates non-empty name, calls `FlashCardsCubit.addGroup(name)`, then navigates back to `/flashcards` and updates UI.
 
 ### MemoriseWordsScreen (`/flashcards/group/:groupId`)
 
@@ -144,12 +254,13 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 **State management**
 
-* `MemoriseViewModel` handles:
+* `MemoriseCubit` handles:
 
   * the current word index
   * counts of known/unknown
   * reveal state
   * next word flow
+  * Emits `MemoriseState`: `MemoriseInitial`, `MemoriseInProgress(currentWord, knownCount, unknownCount)`, `MemoriseCompleted(statistics)`
 
 **Edge cases**
 
@@ -169,21 +280,41 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### LearnScreen (`/learn`)
 
-**Design:** match `screen_shots/ThemeChoice.png`
+**Design reference:** `screen_shots/ThemeChoice.png`
 
-* Contains list with **two rows**:
+**UI Structure**
 
-  * **Listening Practice**
+* Main content displays a list or grid of learning options
+* Contains **two main options** (or more as shown in design):
 
+  * **Listening Practice** card/row:
+    * Visual card or list item
+    * May include icon, title, and description
     * Navigates to `/learn/listening` (`ListeningPracticeScreen`) — Task 3.
-  * **Tests**
-
+  * **Tests** card/row:
+    * Visual card or list item
+    * May include icon, title, and description
     * Navigates to `/learn/grammar-topics` (`GrammarTopicsScreen`). For Task 2 implement the Tests row behavior only.
+* Additional learning options may be present (matching the design):
+  * Each option should be tappable and navigate to appropriate screen
+  * Visual design should match the screenshot layout
+
+**Layout**
+
+* Cards/rows should be arranged in a scrollable list or grid
+* Each item should have clear visual hierarchy
+* Spacing and padding should match the design proportions
+
+**Behavior**
+
+* Tapping any learning option navigates to the corresponding screen
+* Screen should be responsive for web layouts
 
 ### GrammarTopicsScreen (`/learn/grammar-topics`)
 
 * Shows list of grammar topics (mock sample: Articles, Tenses, Prepositions).
-* `GrammarTopicsViewModel` supplies a mock list of `GrammarTopic` objects (id, title, description, sample question count).
+* `LearnCubit` or `GrammarTopicsCubit` manages state with mock list of `GrammarTopic` objects (id, title, description, sample question count).
+  * State: `GrammarTopicsLoaded(topics)`, `GrammarTopicsLoading`, `GrammarTopicsError`
 * Tapping any topic navigates to `/learn/test/:topicId`.
 
 ### TestScreen (`/learn/test/:topicId`)
@@ -204,7 +335,8 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 **Behavior / Logic**
 
-* `TestViewModel` loads mock `List<Question>` for the topic (questions contain text, options, correct option index, optional explanation).
+* `TestCubit` loads mock `List<Question>` for the topic (questions contain text, options, correct option index, optional explanation).
+  * State: `TestInitial`, `TestLoading`, `TestQuestionLoaded(question, selectedIndex)`, `TestResultShown(isCorrect, explanation)`, `TestCompleted(summary)`
 * Flow:
 
   1. User reads question and selects an option.
@@ -222,7 +354,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 **State**
 
-* `TestViewModel` tracks:
+* `TestCubit` tracks and emits state with:
 
   * currentQuestionIndex
   * selectedOptionIndex
@@ -289,7 +421,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 * Sign In Button
 
   * Disabled until both fields valid
-  * On tap, call `AuthViewModel.signIn(email, password)` using `MockAuthManager`
+  * On tap, call `AuthCubit.signIn(email, password)` using `MockAuthManager`
 * Navigation text:
 
   * `Don't have an account? Sign up` — `Sign up` tappable → `/auth/signup`
@@ -324,7 +456,8 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 **Behavior**
 
-* `AuthViewModel.signUp(email, password)` calls `MockAuthManager.signUp`
+* `AuthCubit.signUp(email, password)` calls `MockAuthManager.signUp`
+  * State: `AuthInitial`, `AuthLoading`, `AuthAuthenticated(user)`, `AuthError(message)`
 * `MockAuthManager`:
 
   * Stores users in-memory (or in `shared_preferences` for mock persistence)
@@ -334,14 +467,324 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ---
 
-# Speech Assessment & Articles (existing functionality)
+# Task 6 — Speech Assessment & Articles
 
-* Keep existing Speech Assessment and Articles modules, mapping SwiftUI screens to Flutter widgets with the same names and behavior:
+## Speech Assessment Module
 
-  * `SpeakingTopicsScreen` (design reference: `screen_shots/Chat.png`), `RecordingScreen`, `SpeakingAssessmentScreen` (design reference: `screen_shots/Assesment.png`)
-  * `ArticlesPreviewScreen` (design reference: `screen_shots/Articles list.png`), `ArticleScreen` (design reference: `screen_shots/Article.png`), `ArticleAnalysisScreen`
+### SpeakingTopicsScreen (`/speaking/topics`)
+
+**Design reference:** `screen_shots/Chat.png`
+
+**UI Structure**
+
+* Chat-like interface displaying conversation topics or prompts
+* List of speaking topics/conversation starters:
+  * Each topic displayed as a message bubble or card
+  * Topics may include:
+    * Topic title/question
+    * Description or context
+    * Difficulty level indicator (optional)
+* Navigation/action buttons:
+  * Select topic button or tap to start recording
+  * Back button to return to previous screen
+
+**Behavior**
+
+* User selects a topic to begin speaking practice
+* Tapping a topic navigates to `/speaking/recording` with the selected topic
+* Topics are loaded via `SpeechCubit` from mock data or `NetworkManager`
+
+**State Management**
+
+* `SpeechCubit` handles:
+  * List of available topics
+  * Selected topic state
+  * Navigation to recording screen
+  * State: `SpeechTopicsInitial`, `SpeechTopicsLoaded(topics)`, `SpeechTopicSelected(topic)`
+
+### RecordingScreen (`/speaking/recording`)
+
+**UI Structure**
+
+* **Topic Display** (top):
+  * Shows the selected topic/question
+  * May include instructions or time limit
+* **Recording Controls** (center):
+  * Large record button (circular, prominent)
+  * Visual indicator when recording (pulsing animation, timer)
+  * Stop button (appears during recording)
+* **Timer Display**:
+  * Shows elapsed recording time
+  * May show maximum time limit
+* **Action Buttons**:
+  * Cancel button (returns to topics)
+  * Submit/Finish button (appears after recording stops)
+
+**Behavior**
+
+* User taps record button to start recording
+* `RecorderManager.startRecording()` is called
+* Recording indicator shows active state
+* Timer updates in real-time
+* User taps stop to end recording
+* After stopping, user can:
+  * Re-record (restart recording)
+  * Submit recording (navigate to assessment)
+* Recording audio is captured via `WebRecorderManager` (web-compatible)
+
+**State Management**
+
+* `SpeechCubit` handles:
+  * Recording state (idle, recording, stopped)
+  * Timer state
+  * Audio blob/URL after recording
+  * Navigation to assessment screen
+  * State: `RecordingInitial`, `RecordingInProgress(elapsedTime)`, `RecordingStopped(audioBlob)`, `RecordingError(message)`
+
+**Audio Recording**
+
+* Uses `RecorderManager` interface (implemented as `WebRecorderManager` for web)
+* Recording must work in browser using Web Audio API or compatible package
+* Audio is stored temporarily and passed to assessment screen
+
+### SpeakingAssessmentScreen (`/speaking/assessment`)
+
+**Design reference:** `screen_shots/Assesment.png`
+
+**UI Structure**
+
+* **Assessment Header**:
+  * Topic/question being assessed
+  * Status indicator (processing, completed)
+* **Assessment Results Card**:
+  * Overall score or rating
+  * Breakdown of assessment criteria:
+    * Pronunciation score
+    * Fluency score
+    * Accuracy score
+    * Other metrics (as shown in design)
+* **Feedback Section**:
+  * Text feedback or comments
+  * Highlighted mistakes or suggestions
+  * Positive reinforcement
+* **Action Buttons**:
+  * View detailed results button
+  * Try again button (returns to recording)
+  * Continue/Next button
+
+**Behavior**
+
+* Screen loads after user submits recording
+* `SpeechCubit` processes the recording (mock assessment initially)
+* Assessment results are displayed with visual indicators
+* User can review feedback and scores
+* Navigation options:
+  * Try again → returns to `/speaking/recording`
+  * View results → navigates to `/speaking/results`
+  * Continue → returns to topics or main screen
+
+**State Management**
+
+* `SpeechCubit` handles:
+  * Assessment processing state
+  * Assessment results data
+  * Navigation state
+  * State: `AssessmentProcessing`, `AssessmentCompleted(results)`, `AssessmentError(message)`
+
+**Mock Assessment**
+
+* Initially uses mock assessment logic:
+  * Generates random or predetermined scores
+  * Provides sample feedback text
+  * Later replaceable with real speech recognition API
+
+### SpeakingResultsScreen (`/speaking/results`)
+
+**Design reference:** `screen_shots/Speaking results.png`
+
+**UI Structure**
+
+* **Results Summary** (top):
+  * Overall performance indicator
+  * Total attempts or sessions
+  * Average score or progress chart
+* **History List**:
+  * List of previous speaking attempts:
+    * Date/time of attempt
+    * Topic/question
+    * Score or rating
+    * Brief feedback summary
+  * Tapping an item shows detailed assessment
+* **Statistics Section**:
+  * Progress over time (chart or graph)
+  * Strengths and areas for improvement
+  * Achievement badges or milestones (optional)
+* **Action Buttons**:
+  * Start new practice session
+  * View detailed history
+  * Export results (optional)
+
+**Behavior**
+
+* Displays historical speaking assessment data
+* User can review past attempts and progress
+* Navigation to start new practice session
+* Data is stored locally (mock) or fetched from backend
+
+**State Management**
+
+* `SpeechCubit` handles:
+  * Historical results data
+  * Statistics calculations
+  * Progress tracking
+  * State: `ResultsInitial`, `ResultsLoaded(history, statistics)`, `ResultsError(message)`
+
+---
+
+## Articles Module
+
+### ArticlesPreviewScreen (`/articles`)
+
+**Design reference:** `screen_shots/Articles list.png`
+
+**UI Structure**
+
+* **Header**:
+  * Screen title "Articles" or similar
+  * Search bar (optional, if in design)
+  * Filter/sort options (optional)
+* **Articles List**:
+  * Scrollable list of article cards/items
+  * Each article item displays:
+    * Article title
+    * Preview text or excerpt
+    * Thumbnail image (if available)
+    * Reading time or difficulty level
+    * Date published (optional)
+* **Empty State**:
+  * Message when no articles available
+  * Call-to-action to refresh or check back
+
+**Behavior**
+
+* Screen loads list of available articles
+* `ArticlesCubit` fetches articles from `NetworkManager` (mock initially)
+* Tapping an article navigates to `/articles/:articleId` (`ArticleScreen`)
+* List should be scrollable and responsive
+* Pull-to-refresh functionality (optional for web)
+
+**State Management**
+
+* `ArticlesCubit` handles:
+  * List of articles
+  * Loading state
+  * Error state
+  * Selected article navigation
+  * State: `ArticlesInitial`, `ArticlesLoading`, `ArticlesLoaded(articles)`, `ArticlesError(message)`
+
+### ArticleScreen (`/articles/:articleId`)
+
+**Design reference:** `screen_shots/Article.png`
+
+**UI Structure**
+
+* **Article Header**:
+  * Article title (large, prominent)
+  * Author name and publication date
+  * Reading time estimate
+* **Article Content**:
+  * Scrollable article body text
+  * Paragraphs with proper spacing
+  * Images or media embedded in content
+  * Text formatting (headings, bold, italic, lists)
+* **Action Buttons** (bottom or floating):
+  * "Analyze Article" button → navigates to `/articles/:articleId/analysis`
+  * Bookmark/Save button (optional)
+  * Share button (optional)
+* **Navigation**:
+  * Back button to return to articles list
+  * Progress indicator (reading progress bar, optional)
+
+**Behavior**
+
+* Screen loads article content by ID
+* `ArticlesCubit` fetches full article content
+* Content is displayed in a readable format
+* User can scroll through the article
+* "Analyze Article" button navigates to analysis screen
+* Article reading progress may be tracked (optional)
+
+**State Management**
+
+* `ArticlesCubit` handles:
+  * Current article content
+  * Loading state
+  * Reading progress
+  * Bookmark state (if implemented)
+  * State: `ArticleInitial`, `ArticleLoading`, `ArticleLoaded(article)`, `ArticleError(message)`
+
+### ArticleAnalysisScreen (`/articles/:articleId/analysis`)
+
+**UI Structure**
+
+* **Analysis Header**:
+  * Article title reference
+  * Analysis status indicator
+* **Analysis Results**:
+  * **Vocabulary Analysis**:
+    * List of key words/phrases from article
+    * Definitions or translations
+    * Difficulty level indicators
+  * **Grammar Points**:
+    * Highlighted grammar structures
+    * Explanations and examples
+  * **Comprehension Questions** (optional):
+    * Questions about article content
+    * Answer options or open-ended
+  * **Summary**:
+    * Article summary or key points
+    * Main ideas extraction
+* **Action Buttons**:
+  * Back to article
+  * Retake analysis (if applicable)
+  * Export analysis (optional)
+
+**Behavior**
+
+* Screen analyzes the article content
+* `ArticlesCubit` processes article for:
+  * Vocabulary extraction
+  * Grammar identification
+  * Comprehension question generation (mock)
+* Analysis results are displayed in organized sections
+* User can review vocabulary and grammar points
+* Navigation back to article or articles list
+
+**State Management**
+
+* `ArticlesCubit` handles:
+  * Analysis processing state
+  * Analysis results data
+  * Vocabulary list
+  * Grammar points list
+  * State: `AnalysisInitial`, `AnalysisProcessing`, `AnalysisCompleted(analysis)`, `AnalysisError(message)`
+
+**Mock Analysis**
+
+* Initially uses mock analysis:
+  * Extracts sample vocabulary from article text
+  * Identifies common grammar patterns
+  * Generates sample comprehension questions
+  * Later replaceable with NLP/ML services
+
+---
+
+## Technical Requirements
+
 * Recording for speech assessment must work in browser (use `WebRecorderManager`) and be abstracted behind `RecorderManager` interface for future mobile support.
-* Speaking results screen (design reference: `screen_shots/Speaking results.png`)
+* All speech assessment and article data initially uses mock implementations via `NetworkManager` interface.
+* Cubits (`SpeechCubit`, `ArticlesCubit`) handle business logic and state management using `flutter_bloc` Cubit pattern.
+* Services are injectable for easy replacement with real backend implementations.
 
 ---
 
@@ -410,38 +853,134 @@ Provide initial mock datasets:
 ]
 ```
 
+**Speaking Topics**
+
+```json
+[
+  {
+    "id": "st-1",
+    "title": "Describe your favorite vacation",
+    "description": "Talk about a memorable trip you took. Include details about the destination, activities, and why it was special.",
+    "difficulty": "intermediate",
+    "timeLimit": 120
+  },
+  {
+    "id": "st-2",
+    "title": "Discuss your daily routine",
+    "description": "Describe a typical day in your life from morning to evening.",
+    "difficulty": "beginner",
+    "timeLimit": 90
+  },
+  {
+    "id": "st-3",
+    "title": "Explain a hobby or interest",
+    "description": "Talk about something you enjoy doing in your free time. Why do you like it?",
+    "difficulty": "intermediate",
+    "timeLimit": 120
+  }
+]
+```
+
+**Articles**
+
+```json
+[
+  {
+    "id": "art-1",
+    "title": "The Benefits of Learning a New Language",
+    "author": "Language Learning Team",
+    "publishedDate": "2024-01-15",
+    "readingTime": 5,
+    "difficulty": "intermediate",
+    "excerpt": "Learning a new language opens doors to new cultures, improves cognitive function, and enhances career opportunities...",
+    "content": "Full article text with paragraphs, headings, and formatting..."
+  },
+  {
+    "id": "art-2",
+    "title": "Effective Study Techniques for Language Learners",
+    "author": "Education Expert",
+    "publishedDate": "2024-01-20",
+    "readingTime": 7,
+    "difficulty": "advanced",
+    "excerpt": "Discover proven methods to accelerate your language learning journey...",
+    "content": "Full article text..."
+  }
+]
+```
+
+**Sample Article Analysis**
+
+```json
+{
+  "articleId": "art-1",
+  "vocabulary": [
+    { "word": "cognitive", "definition": "relating to mental processes", "difficulty": "advanced" },
+    { "word": "enhance", "definition": "to improve or increase", "difficulty": "intermediate" }
+  ],
+  "grammarPoints": [
+    { "structure": "Present Perfect", "example": "has opened", "explanation": "Used for actions with present relevance" }
+  ],
+  "comprehensionQuestions": [
+    {
+      "id": "cq-1",
+      "question": "What are three benefits mentioned in the article?",
+      "type": "open-ended"
+    }
+  ],
+  "summary": "The article discusses how learning languages improves brain function, cultural understanding, and career prospects."
+}
+```
+
 ---
 
-# ViewModel & Service Interfaces (brief)
+# Cubit & Service Interfaces (brief)
 
-**FlashCardsViewModel**
+**FlashCardsCubit extends Cubit<FlashCardsState>**
 
-* `Stream<List<WordGroup>> groups`
-* `addGroup(name)`, `addWord(groupId, FlashCard)`, `getWordsForGroup(groupId)`
+* Methods: `loadGroups()`, `addGroup(name)`, `addWord(groupId, FlashCard)`, `getWordsForGroup(groupId)`
+* State: `FlashCardsInitial`, `FlashCardsLoading`, `FlashCardsLoaded(groups)`, `FlashCardsError(message)`
 
-**MemoriseViewModel**
+**MemoriseCubit extends Cubit<MemoriseState>**
 
-* `currentWord`, `revealTranslation()`, `markKnown()`, `markUnknown()`, `reset()`, `statistics`
+* Methods: `loadGroup(groupId)`, `revealTranslation()`, `markKnown()`, `markUnknown()`, `nextWord()`, `reset()`
+* State: `MemoriseInitial`, `MemoriseInProgress(currentWord, knownCount, unknownCount)`, `MemoriseCompleted(statistics)`
 
-**TestViewModel**
+**TestCubit extends Cubit<TestState>**
 
-* `loadTopic(topicId)`, `currentQuestion`, `selectOption(index)`, `checkAnswer()`, `continue()`, `summary`
+* Methods: `loadTopic(topicId)`, `selectOption(index)`, `checkAnswer()`, `continueToNext()`, `reset()`
+* State: `TestInitial`, `TestLoading`, `TestQuestionLoaded(question, selectedIndex)`, `TestResultShown(isCorrect, explanation)`, `TestCompleted(summary)`
 
-**ListeningViewModel**
+**ListeningCubit extends Cubit<ListeningState>**
 
-* `List<AudioRecord> records`, `selectRecord(id)`, `play()`, `pause()`, `seekBy(seconds)`, streams for position/duration
+* Methods: `loadRecords()`, `selectRecord(id)`, `play()`, `pause()`, `seekBy(seconds)`
+* State: `ListeningInitial`, `ListeningLoaded(records)`, `ListeningPlaying(currentRecord, position, duration)`, `ListeningPaused`, `ListeningError(message)`
+* Streams: `positionStream`, `durationStream` from `AudioManager`
 
-**AuthViewModel**
+**AuthCubit extends Cubit<AuthState>**
 
-* `signIn(email, password) -> Result`
-* `signUp(email, password) -> Result`
-* `sessionStateStream`
+* Methods: `signIn(email, password)`, `signUp(email, password)`, `signOut()`, `checkSession()`
+* State: `AuthInitial`, `AuthLoading`, `AuthAuthenticated(user)`, `AuthUnauthenticated`, `AuthError(message)`
+
+**SpeechCubit extends Cubit<SpeechState>**
+
+* Methods: `loadTopics()`, `selectTopic(id)`, `startRecording()`, `stopRecording()`, `submitRecording()`, `loadAssessmentResults()`, `loadResultsHistory()`
+* State: `SpeechInitial`, `SpeechTopicsLoaded(topics)`, `SpeechRecording(elapsedTime)`, `SpeechAssessmentCompleted(results)`, `SpeechResultsLoaded(history, statistics)`, `SpeechError(message)`
+
+**ArticlesCubit extends Cubit<ArticlesState>**
+
+* Methods: `loadArticles()`, `loadArticle(id)`, `analyzeArticle(id)`, `bookmarkArticle(id)`, `getReadingProgress(id)`
+* State: `ArticlesInitial`, `ArticlesLoading`, `ArticlesLoaded(articles)`, `ArticleLoaded(article)`, `ArticleAnalysisCompleted(analysis)`, `ArticlesError(message)`
 
 **NetworkManager interface**
 
 * `Future<List<GrammarTopic>> getGrammarTopics()`
 * `Future<List<Question>> getQuestions(topicId)`
 * `Future<List<WordGroup>> getFlashcardGroups()`
+* `Future<List<SpeakingTopic>> getSpeakingTopics()`
+* `Future<AssessmentResult> assessRecording(audioBlob, topicId)`
+* `Future<List<Article>> getArticles()`
+* `Future<Article> getArticle(id)`
+* `Future<ArticleAnalysis> analyzeArticle(id)`
 * Implement `MockNetworkManager` with the mock data above.
 
 **AudioManager / RecorderManager**
@@ -493,5 +1032,22 @@ Provide initial mock datasets:
 * `/auth/signup` with email + password + repeat.
 * Sign up button disabled until validation passes.
 * Duplicate email error handled by mock.
+
+**Task 6 — Speech Assessment**
+
+* `/speaking/topics` displays list of speaking topics in chat-like interface.
+* `/speaking/recording` allows user to record speech with timer and controls.
+* `/speaking/assessment` shows assessment results with scores and feedback.
+* `/speaking/results` displays history and statistics of speaking attempts.
+* Recording works in browser via `WebRecorderManager`.
+* Mock assessment generates scores and feedback.
+
+**Task 7 — Articles**
+
+* `/articles` displays list of articles with previews.
+* `/articles/:articleId` shows full article content with reading interface.
+* `/articles/:articleId/analysis` provides vocabulary, grammar, and comprehension analysis.
+* Article analysis extracts key information and provides learning insights.
+* Mock analysis processes article content locally.
 
 ---
