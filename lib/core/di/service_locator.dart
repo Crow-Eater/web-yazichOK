@@ -16,19 +16,27 @@ class ServiceLocator {
 
   ServiceLocator._internal();
 
-  late final NetworkRepository networkRepository;
-  late final AuthManager authManager;
-  late final AudioManager audioManager;
-  late final RecorderManager recorderManager;
+  late NetworkRepository networkRepository;
+  late AuthManager authManager;
+  late AudioManager audioManager;
+  late RecorderManager recorderManager;
+
+  bool _isInitialized = false;
 
   /// Initialize all services
   /// Call this once at app startup
   void setup() {
+    // Dispose old instances if already initialized
+    if (_isInitialized) {
+      dispose();
+    }
+
     // Initialize with mock implementations
     networkRepository = MockNetworkRepository();
     authManager = MockAuthManager();
     audioManager = LocalAudioManager();
     recorderManager = WebRecorderManager();
+    _isInitialized = true;
   }
 
   /// Reset all services (useful for testing)

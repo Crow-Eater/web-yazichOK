@@ -16,17 +16,36 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
 
-    // Color scheme
-    colorScheme: ColorScheme.light(
+    // Color scheme - explicitly set primary color for Material 3
+    colorScheme: const ColorScheme(
+      brightness: Brightness.light,
       primary: primaryBlue,
-      secondary: primaryPurple,
-      tertiary: greenAccent,
-      surface: cardWhite,
-      background: backgroundLight,
       onPrimary: Colors.white,
+      primaryContainer: Color(0xFFDBEEFE),
+      onPrimaryContainer: Color(0xFF001C3B),
+      secondary: primaryPurple,
       onSecondary: Colors.white,
-      onSurface: textPrimary,
+      secondaryContainer: Color(0xFFF3E5F5),
+      onSecondaryContainer: Color(0xFF1A0033),
+      tertiary: greenAccent,
+      onTertiary: Colors.white,
+      tertiaryContainer: Color(0xFFD1F4EA),
+      onTertiaryContainer: Color(0xFF00201A),
+      error: Color(0xFFDC2626),
+      onError: Colors.white,
+      errorContainer: Color(0xFFFEE2E2),
+      onErrorContainer: Color(0xFF5F1B1B),
+      background: backgroundLight,
       onBackground: textPrimary,
+      surface: cardWhite,
+      onSurface: textPrimary,
+      surfaceVariant: Color(0xFFF3F4F6),
+      onSurfaceVariant: textSecondary,
+      outline: Color(0xFFE5E7EB),
+      shadow: Color(0xFF000000),
+      inverseSurface: textPrimary,
+      onInverseSurface: cardWhite,
+      inversePrimary: Color(0xFF93C5FD),
     ),
 
     // Scaffold
