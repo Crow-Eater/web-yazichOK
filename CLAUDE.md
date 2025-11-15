@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Flutter web application for language learning platform (yazichOK). Currently a minimal Hello World app being developed into a comprehensive language learning system with flashcards, grammar tests, listening practice, speech assessment, and article reading features.
 
 **Target Platform**: Web (with potential mobile expansion)
-**Flutter Version**: 3.24.5 (stable channel)
+**Flutter Version**: 3.35.6 (stable channel)
 
 ## Development Commands
 
