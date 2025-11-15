@@ -60,10 +60,10 @@ class FlashcardWidget extends StatelessWidget {
           ),
 
           // Transcription
-          if (flashCard.transcription != null) ...[
+          if (flashCard.transcription.isNotEmpty) ...[
             const SizedBox(height: 16),
             Text(
-              flashCard.transcription!,
+              flashCard.transcription,
               style: theme.textTheme.titleLarge?.copyWith(
                 color: Colors.white.withOpacity(0.9),
                 fontStyle: FontStyle.italic,
