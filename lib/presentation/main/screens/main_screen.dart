@@ -115,7 +115,7 @@ class _MainContent extends StatelessWidget {
                                 icon: Icons.mic,
                                 gradient: AppTheme.blueGradient,
                                 onTap: () {
-                                  context.push('/practice/speaking');
+                                  context.push('/speaking/topics');
                                 },
                               ),
                             ),
@@ -129,7 +129,7 @@ class _MainContent extends StatelessWidget {
                                 icon: Icons.style,
                                 gradient: AppTheme.purpleGradient,
                                 onTap: () {
-                                  context.push('/practice/flashcards');
+                                  context.push('/flashcards');
                                 },
                               ),
                             ),
