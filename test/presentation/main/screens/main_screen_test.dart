@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:web/core/di/service_locator.dart';
-import 'package:web/domain/managers/auth_manager.dart';
-import 'package:web/data/models/user.dart';
-import 'package:web/presentation/auth/cubit/auth_cubit.dart';
-import 'package:web/presentation/main/screens/main_screen.dart';
-import 'package:web/core/theme/app_theme.dart';
+import 'package:yazich_ok/core/di/service_locator.dart';
+import 'package:yazich_ok/domain/managers/auth_manager.dart';
+import 'package:yazich_ok/data/models/user.dart';
+import 'package:yazich_ok/presentation/auth/cubit/auth_cubit.dart';
+import 'package:yazich_ok/presentation/main/screens/main_screen.dart';
+import 'package:yazich_ok/core/theme/app_theme.dart';
 
 class MockAuthManager extends Mock implements AuthManager {}
 

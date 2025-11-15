@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:web/data/managers/mock_auth_manager.dart';
+import 'package:yazich_ok/data/managers/mock_auth_manager.dart';
 
 void main() {
   group('MockAuthManager', () {

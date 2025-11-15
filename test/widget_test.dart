@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:web/main.dart';
-import 'package:web/core/di/service_locator.dart';
+import 'package:yazich_ok/main.dart';
+import 'package:yazich_ok/core/di/service_locator.dart';
 
 void main() {
   setUpAll(() {

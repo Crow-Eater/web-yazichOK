@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:web/domain/managers/auth_manager.dart';
-import 'package:web/data/models/user.dart';
-import 'package:web/presentation/auth/cubit/auth_cubit.dart';
-import 'package:web/presentation/auth/cubit/auth_state.dart';
+import 'package:yazich_ok/domain/managers/auth_manager.dart';
+import 'package:yazich_ok/data/models/user.dart';
+import 'package:yazich_ok/presentation/auth/cubit/auth_cubit.dart';
+import 'package:yazich_ok/presentation/auth/cubit/auth_state.dart';
 
 class MockAuthManager extends Mock implements AuthManager {}
 

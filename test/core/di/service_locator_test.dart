@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:web/core/di/service_locator.dart';
-import 'package:web/data/repositories/mock_network_repository.dart';
-import 'package:web/data/managers/mock_auth_manager.dart';
-import 'package:web/data/managers/local_audio_manager.dart';
-import 'package:web/data/managers/web_recorder_manager.dart';
+import 'package:yazich_ok/core/di/service_locator.dart';
+import 'package:yazich_ok/data/repositories/mock_network_repository.dart';
+import 'package:yazich_ok/data/managers/mock_auth_manager.dart';
+import 'package:yazich_ok/data/managers/local_audio_manager.dart';
+import 'package:yazich_ok/data/managers/web_recorder_manager.dart';
 
 void main() {
   group('ServiceLocator', () {

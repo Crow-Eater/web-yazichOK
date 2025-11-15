@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:web/data/repositories/mock_network_repository.dart';
-import 'package:web/data/models/flash_card.dart';
+import 'package:yazich_ok/data/repositories/mock_network_repository.dart';
+import 'package:yazich_ok/data/models/flash_card.dart';
 
 void main() {
   group('MockNetworkRepository', () {
