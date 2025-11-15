@@ -126,7 +126,7 @@ class AppRouter {
           ),
         ),
 
-        // Speaking
+        // Speaking - Nested routes with shared SpeechCubit
         GoRoute(
           path: Routes.speakingTopics,
           builder: (context, state) => BlocProvider(
@@ -136,14 +136,16 @@ class AppRouter {
             )..loadTopics(),
             child: const SpeakingTopicsScreen(),
           ),
-        ),
-        GoRoute(
-          path: Routes.recording,
-          builder: (context, state) => const RecordingScreen(),
-        ),
-        GoRoute(
-          path: Routes.assessment,
-          builder: (context, state) => const SpeakingAssessmentScreen(),
+          routes: [
+            GoRoute(
+              path: 'recording',
+              builder: (context, state) => const RecordingScreen(),
+            ),
+            GoRoute(
+              path: 'assessment',
+              builder: (context, state) => const SpeakingAssessmentScreen(),
+            ),
+          ],
         ),
         GoRoute(
           path: Routes.speakingResults,
