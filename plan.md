@@ -74,7 +74,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### Entry
 
-* Add a **purple UI element** on the `MainScreen` (matching the design in `Screenshots/MainScreen.png`). Tapping opens route `/flashcards`.
+* Add a **purple UI element** on the `MainScreen` (matching the design in `screen_shots/Main screen.png`). Tapping opens route `/flashcards`.
 
 ### FlashCardsScreen (route `/flashcards`)
 
@@ -97,7 +97,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### AddNewWordScreen (`/flashcards/add-word`)
 
-**Design (match `Screenshots/AddNewWord.png`)**
+**Design (match `screen_shots/Add word.png`)**
 
 * Fields:
 
@@ -120,7 +120,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### MemoriseWordsScreen (`/flashcards/group/:groupId`)
 
-**Design reference:** `Screenshots/MemoriseWords.png`
+**Design reference:** `screen_shots/Word card.png`
 **Functionality**
 
 * Show **one flash card at a time** with:
@@ -169,7 +169,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### LearnScreen (`/learn`)
 
-**Design:** match `Screenshots/Learn.png`
+**Design:** match `screen_shots/ThemeChoice.png`
 
 * Contains list with **two rows**:
 
@@ -188,7 +188,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### TestScreen (`/learn/test/:topicId`)
 
-**Design reference:** `Screenshots/Test.png`
+**Design reference:** `screen_shots/Test.png`
 **UI Structure**
 
 * **Test Card** (top)
@@ -235,7 +235,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### ListeningPracticeScreen (`/learn/listening`)
 
-**Design reference:** `Screenshots/ListeningPractice.png`
+**Design reference:** `screen_shots/Audition.png`
 **Layout**
 
 * **Audio Player Card** at top:
@@ -274,7 +274,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### SignInScreen (`/auth/signin`)
 
-**Design reference:** `Screenshots/SignIn.png`
+**Design reference:** `screen_shots/Sign in.png`
 **UI**
 
 * Email TextField
@@ -309,7 +309,7 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 ### SignUpScreen (`/auth/signup`)
 
-**Design reference:** `Screenshots/SignUp.png`
+**Design reference:** `screen_shots/Sign up.png`
 **UI**
 
 * Email field (placeholder: `Email`) — basic format validation
@@ -338,9 +338,10 @@ Create a feature spec and acceptance-criteria document for developers that inclu
 
 * Keep existing Speech Assessment and Articles modules, mapping SwiftUI screens to Flutter widgets with the same names and behavior:
 
-  * `SpeakingTopicsScreen`, `RecordingScreen`, `SpeakingAssessmentScreen`
-  * `ArticlesPreviewScreen`, `ArticleScreen`, `ArticleAnalysisScreen`
+  * `SpeakingTopicsScreen` (design reference: `screen_shots/Chat.png`), `RecordingScreen`, `SpeakingAssessmentScreen` (design reference: `screen_shots/Assesment.png`)
+  * `ArticlesPreviewScreen` (design reference: `screen_shots/Articles list.png`), `ArticleScreen` (design reference: `screen_shots/Article.png`), `ArticleAnalysisScreen`
 * Recording for speech assessment must work in browser (use `WebRecorderManager`) and be abstracted behind `RecorderManager` interface for future mobile support.
+* Speaking results screen (design reference: `screen_shots/Speaking results.png`)
 
 ---
 
