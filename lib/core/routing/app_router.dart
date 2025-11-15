@@ -203,7 +203,9 @@ class AppRouter {
         GoRoute(
           path: Routes.speakingTopics,
           builder: (context, state) {
+            print('DEBUG: Speaking topics route matched, loading topics...');
             ServiceLocator().speechCubit.loadTopics();
+            print('DEBUG: Providing SpeakingTopicsScreen with cubit');
             return BlocProvider.value(
               value: ServiceLocator().speechCubit,
               child: const SpeakingTopicsScreen(),

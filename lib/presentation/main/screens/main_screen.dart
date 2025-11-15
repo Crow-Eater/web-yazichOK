@@ -115,6 +115,7 @@ class _MainContent extends StatelessWidget {
                                 icon: Icons.mic,
                                 gradient: AppTheme.blueGradient,
                                 onTap: () {
+                                  print('DEBUG: Speech Practice card tapped, navigating to /speaking/topics');
                                   context.push('/speaking/topics');
                                 },
                               ),

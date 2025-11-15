@@ -21,10 +21,15 @@ class SpeechCubit extends Cubit<SpeechState> {
   /// Load all speaking topics
   Future<void> loadTopics() async {
     try {
+      print('DEBUG: SpeechCubit.loadTopics() called');
       emit(const SpeechTopicsLoading());
+      print('DEBUG: Emitted SpeechTopicsLoading state');
       final topics = await _networkRepository.getSpeakingTopics();
+      print('DEBUG: Got ${topics.length} topics from repository');
       emit(SpeechTopicsLoaded(topics));
+      print('DEBUG: Emitted SpeechTopicsLoaded state with ${topics.length} topics');
     } catch (e) {
+      print('DEBUG: Error loading topics: $e');
       emit(SpeechError('Failed to load topics: ${e.toString()}'));
     }
   }
