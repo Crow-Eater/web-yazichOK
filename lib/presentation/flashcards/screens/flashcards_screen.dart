@@ -20,13 +20,13 @@ class FlashCardsScreen extends StatelessWidget {
         title: const Text('Flash Cards'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go(RouteNames.main),
+          onPressed: () => context.go(Routes.main),
         ),
         actions: [
           // Plus icon to add new word
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => context.push(RouteNames.flashcardsAddWord),
+            onPressed: () => context.push(Routes.addWord),
             tooltip: 'Add New Word',
           ),
         ],
@@ -101,7 +101,7 @@ class FlashCardsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton.icon(
-                      onPressed: () => context.push(RouteNames.flashcardsAddGroup),
+                      onPressed: () => context.push(Routes.addGroup),
                       icon: const Icon(Icons.add),
                       label: const Text('Create Group'),
                     ),
@@ -119,7 +119,7 @@ class FlashCardsScreen extends StatelessWidget {
                 return GroupListItem(
                   group: group,
                   onTap: () {
-                    context.push('${RouteNames.flashcards}/group/${group.id}');
+                    context.push('${Routes.flashcards}/group/${group.id}');
                   },
                 );
               },
@@ -136,7 +136,7 @@ class FlashCardsScreen extends StatelessWidget {
           // Only show FAB when groups are loaded (including empty state)
           if (state is FlashCardsLoaded) {
             return FloatingActionButton(
-              onPressed: () => context.push(RouteNames.flashcardsAddGroup),
+              onPressed: () => context.push(Routes.addGroup),
               tooltip: 'Add New Group',
               child: const Icon(Icons.folder_open),
             );

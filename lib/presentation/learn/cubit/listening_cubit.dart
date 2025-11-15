@@ -11,7 +11,7 @@ class ListeningCubit extends Cubit<ListeningState> {
   final AudioManager _audioManager;
 
   StreamSubscription<Duration>? _positionSubscription;
-  StreamSubscription<Duration>? _durationSubscription;
+  StreamSubscription<Duration?>? _durationSubscription;
   StreamSubscription<bool>? _playingSubscription;
 
   ListeningCubit(this._networkRepository, this._audioManager)
@@ -66,7 +66,7 @@ class ListeningCubit extends Cubit<ListeningState> {
           _audioManager.durationStream.listen((duration) {
         if (state is ListeningLoaded) {
           final currentState = state as ListeningLoaded;
-          emit(currentState.copyWith(duration: duration));
+          emit(currentState.copyWith(duration: duration ?? Duration.zero));
         }
       });
 

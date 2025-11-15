@@ -28,7 +28,7 @@ class RecordingScreen extends StatelessWidget {
         listener: (context, state) {
           // Navigate to assessment screen when recording is submitted
           if (state is SpeechAssessmentProcessing) {
-            context.push(RouteNames.assessment);
+            context.push(Routes.assessment);
           }
         },
         builder: (context, state) {

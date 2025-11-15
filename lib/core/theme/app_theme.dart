@@ -65,13 +65,13 @@ class AppTheme {
     ),
 
     // Card
-    cardTheme: const CardThemeData(
+    cardTheme: CardTheme(
       color: cardWhite,
       elevation: 0,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     ),
 
     // Text theme

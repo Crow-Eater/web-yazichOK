@@ -26,7 +26,7 @@ class MemoriseWordsScreen extends StatelessWidget {
         title: const Text('Memorise Words'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go(RouteNames.flashcards),
+          onPressed: () => context.go(Routes.flashcards),
         ),
       ),
       body: BlocBuilder<MemoriseCubit, MemoriseState>(
@@ -97,7 +97,7 @@ class MemoriseWordsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
-                    onPressed: () => context.push(RouteNames.flashcardsAddWord),
+                    onPressed: () => context.push(Routes.addWord),
                     icon: const Icon(Icons.add),
                     label: const Text('Add Words'),
                   ),
@@ -118,7 +118,7 @@ class MemoriseWordsScreen extends StatelessWidget {
                     context.read<MemoriseCubit>().reset();
                   },
                   onBackToGroups: () {
-                    context.go(RouteNames.flashcards);
+                    context.go(Routes.flashcards);
                   },
                 ),
               ),

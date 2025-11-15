@@ -98,7 +98,7 @@ class GrammarTopicsScreen extends StatelessWidget {
                 return TopicListItem(
                   topic: topic,
                   onTap: () {
-                    context.push('${RouteNames.learn}/test/${topic.id}');
+                    context.push('${Routes.learn}/test/${topic.id}');
                   },
                 );
               },

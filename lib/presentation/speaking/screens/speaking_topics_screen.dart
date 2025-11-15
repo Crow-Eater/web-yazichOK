@@ -21,7 +21,7 @@ class SpeakingTopicsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
-              context.push(RouteNames.speakingResults);
+              context.push(Routes.speakingResults);
             },
             tooltip: 'View Results History',
           ),
@@ -126,7 +126,7 @@ class SpeakingTopicsScreen extends StatelessWidget {
                           topic: topic,
                           onTap: () {
                             context.read<SpeechCubit>().selectTopic(topic);
-                            context.push(RouteNames.recording);
+                            context.push(Routes.recording);
                           },
                         );
                       },

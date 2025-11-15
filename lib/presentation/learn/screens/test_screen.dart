@@ -209,7 +209,7 @@ class TestScreen extends StatelessWidget {
                   context.read<TestCubit>().reset();
                 },
                 onBackToTopics: () {
-                  context.go(RouteNames.grammarTopics);
+                  context.go(Routes.grammarTopics);
                 },
               ),
             );

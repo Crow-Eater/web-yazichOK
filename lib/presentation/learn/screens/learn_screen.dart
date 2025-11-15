@@ -16,7 +16,7 @@ class LearnScreen extends StatelessWidget {
         title: const Text('Learn'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go(RouteNames.main),
+          onPressed: () => context.go(Routes.main),
         ),
       ),
       body: SingleChildScrollView(
@@ -61,7 +61,7 @@ class LearnScreen extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              onTap: () => context.push(RouteNames.grammarTopics),
+              onTap: () => context.push(Routes.grammarTopics),
             ),
 
             // Listening Practice option
@@ -77,7 +77,7 @@ class LearnScreen extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              onTap: () => context.push(RouteNames.listening),
+              onTap: () => context.push(Routes.listening),
             ),
           ],
         ),

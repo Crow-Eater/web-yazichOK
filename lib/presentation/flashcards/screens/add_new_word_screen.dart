@@ -55,9 +55,7 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
       final word = FlashCard(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         word: _wordController.text.trim(),
-        transcription: _transcriptionController.text.trim().isNotEmpty
-            ? _transcriptionController.text.trim()
-            : null,
+        transcription: _transcriptionController.text.trim(),
         translation: _translationController.text.trim(),
       );
 
@@ -236,7 +234,7 @@ class _AddNewWordScreenState extends State<AddNewWordScreen> {
                         : (value) {
                             if (value == 'create_new') {
                               // Navigate to create group screen
-                              context.push(RouteNames.flashcardsAddGroup).then((_) {
+                              context.push(Routes.addGroup).then((_) {
                                 // Reload groups after returning
                                 context.read<FlashCardsCubit>().loadGroups();
                               });
