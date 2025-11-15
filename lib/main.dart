@@ -1,39 +1,25 @@
 import 'package:flutter/material.dart';
+import 'core/di/service_locator.dart';
+import 'core/routing/app_router.dart';
+import 'core/theme/app_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  // Initialize dependency injection
+  sl.setup();
+
+  runApp(const YazichOKApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class YazichOKApp extends StatelessWidget {
+  const YazichOKApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Hello World',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Flutter Web'),
-      ),
-      body: const Center(
-        child: Text(
-          'Hello World from Flutter!',
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
+    return MaterialApp.router(
+      title: 'yazichOK - Language Learning',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      routerConfig: AppRouter.router(),
     );
   }
 }
