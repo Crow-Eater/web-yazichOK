@@ -35,7 +35,7 @@ class _MainContent extends StatelessWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         body: Row(
           children: [
             // Main content
@@ -150,16 +150,16 @@ class _MainContent extends StatelessWidget {
                           level: 'Advanced',
                           readTime: '5 min read',
                           onTap: () {
-                            context.push('/articles/article-1');
+                            context.push('/articles/art-1');
                           },
                         ),
                         const SizedBox(height: 12),
                         _ArticleCard(
-                          title: 'Climate Change Solutions',
+                          title: 'Effective Study Techniques for Language Learners',
                           level: 'Intermediate',
                           readTime: '4 min read',
                           onTap: () {
-                            context.push('/articles/article-2');
+                            context.push('/articles/art-2');
                           },
                         ),
                       ]),
@@ -216,69 +216,6 @@ class _MainContent extends StatelessWidget {
                 ),
               ),
           ],
-        ),
-
-        // Bottom navigation bar
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: 0,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.school),
-              label: 'Practice',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.assessment),
-              label: 'Progress',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          onTap: (index) {
-            // Handle navigation
-            switch (index) {
-              case 0:
-                // Already on home - navigate to main if not there
-                context.go('/');
-                break;
-              case 1:
-                // Practice - navigate to Learn screen
-                context.push('/learn');
-                break;
-              case 2:
-                // Progress - navigate to speaking results
-                context.push('/speaking/results');
-                break;
-              case 3:
-                // Profile - sign out for now (placeholder)
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Profile'),
-                    content: const Text('Profile screen coming soon!'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('OK'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          context.read<AuthCubit>().signOut();
-                        },
-                        child: const Text('Sign Out'),
-                      ),
-                    ],
-                  ),
-                );
-                break;
-            }
-          },
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yazich_ok/core/di/service_locator.dart';
 import 'package:yazich_ok/domain/managers/auth_manager.dart';
@@ -30,13 +31,38 @@ void main() {
       when(() => authManager.isAuthenticated()).thenAnswer((_) async => false);
     });
 
+    void setUpLargeScreen(WidgetTester tester) {
+      // Set a larger screen size to accommodate sign up form
+      tester.view.physicalSize = const Size(800, 1200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+    }
+
     Widget createScreen() {
-      return MaterialApp(
+      final router = GoRouter(
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => const Scaffold(body: Text('Main')),
+          ),
+          GoRoute(
+            path: '/signin',
+            builder: (context, state) => const Scaffold(body: Text('Sign In')),
+          ),
+          GoRoute(
+            path: '/signup',
+            builder: (context, state) => BlocProvider<AuthCubit>(
+              create: (_) => AuthCubit(authManager),
+              child: const SignUpScreen(),
+            ),
+          ),
+        ],
+        initialLocation: '/signup',
+      );
+
+      return MaterialApp.router(
         theme: AppTheme.lightTheme,
-        home: BlocProvider<AuthCubit>(
-          create: (_) => AuthCubit(authManager),
-          child: const SignUpScreen(),
-        ),
+        routerConfig: router,
       );
     }
 
@@ -108,6 +134,7 @@ void main() {
 
     testWidgets('create account button is enabled when form is filled and terms accepted',
         (tester) async {
+      setUpLargeScreen(tester);
       await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
@@ -155,6 +182,7 @@ void main() {
     });
 
     testWidgets('terms checkbox can be toggled', (tester) async {
+      setUpLargeScreen(tester);
       await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
@@ -175,6 +203,7 @@ void main() {
     });
 
     testWidgets('validates email field', (tester) async {
+      setUpLargeScreen(tester);
       await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
@@ -206,6 +235,7 @@ void main() {
     });
 
     testWidgets('validates password length', (tester) async {
+      setUpLargeScreen(tester);
       await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
@@ -239,6 +269,7 @@ void main() {
     testWidgets('calls signUp when form is submitted', (tester) async {
       when(() => authManager.signUp(any(), any())).thenAnswer((_) async => testUser);
 
+      setUpLargeScreen(tester);
       await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
@@ -255,15 +286,15 @@ void main() {
         find.widgetWithText(TextFormField, 'Password'),
         'password123',
       );
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       // Accept terms
       await tester.tap(find.byType(Checkbox));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       // Submit
       await tester.tap(find.widgetWithText(ElevatedButton, 'Create Account'));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       // Verify signUp was called
       verify(() => authManager.signUp('test@example.com', 'password123')).called(1);
@@ -271,9 +302,10 @@ void main() {
 
     testWidgets('shows loading indicator during sign up', (tester) async {
       when(() => authManager.signUp(any(), any())).thenAnswer(
-        (_) => Future.delayed(const Duration(seconds: 1), () => testUser),
+        (_) => Future.delayed(const Duration(milliseconds: 100), () => testUser),
       );
 
+      setUpLargeScreen(tester);
       await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
@@ -302,12 +334,16 @@ void main() {
 
       // Should show loading indicator
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      // Wait for async operation to complete
+      await tester.pumpAndSettle();
     });
 
     testWidgets('shows error message on failed sign up', (tester) async {
       when(() => authManager.signUp(any(), any()))
           .thenThrow(Exception('Email already exists'));
 
+      setUpLargeScreen(tester);
       await tester.pumpWidget(createScreen());
       await tester.pumpAndSettle();
 
@@ -324,16 +360,17 @@ void main() {
         find.widgetWithText(TextFormField, 'Password'),
         'password123',
       );
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       // Accept terms
       await tester.tap(find.byType(Checkbox));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       // Submit
       await tester.tap(find.widgetWithText(ElevatedButton, 'Create Account'));
-      await tester.pump();
-      await tester.pump(); // Extra pump for state change
+      await tester.pump(); // Pump once to trigger the async call
+      await tester.pump(); // Pump again for state change
+      await tester.pump(const Duration(milliseconds: 100)); // Allow snackbar animation
 
       // Should show error in snackbar
       expect(find.text('Email already exists'), findsOneWidget);

@@ -110,8 +110,11 @@ void main() {
               .thenAnswer((_) => Stream.value(5));
           return SpeechCubit(mockNetworkRepository, mockRecorderManager);
         },
-        seed: () => SpeechRecordingIdle(testTopics.first),
-        act: (cubit) => cubit.startRecording(),
+        act: (cubit) async {
+          cubit.selectTopic(testTopics.first);
+          await cubit.startRecording();
+        },
+        skip: 1, // Skip the selectTopic emission
         expect: () => [
           SpeechRecording(testTopics.first, 0),
           SpeechRecording(testTopics.first, 5),
@@ -130,7 +133,6 @@ void main() {
               .thenAnswer((_) async => 'mock-audio-url');
           return SpeechCubit(mockNetworkRepository, mockRecorderManager);
         },
-        seed: () => SpeechRecordingIdle(testTopics.first),
         act: (cubit) async {
           cubit.selectTopic(testTopics.first);
           await cubit.stopRecording();
@@ -157,12 +159,13 @@ void main() {
               .thenAnswer((_) async => testResult);
           return SpeechCubit(mockNetworkRepository, mockRecorderManager);
         },
-        seed: () => SpeechRecordingStopped(
-          testTopics.first,
-          'mock-audio-url',
-          60,
-        ),
-        act: (cubit) => cubit.submitRecording(),
+        act: (cubit) async {
+          cubit.selectTopic(testTopics.first);
+          // Simulate having recorded audio
+          await cubit.stopRecording();
+          await cubit.submitRecording();
+        },
+        skip: 2, // Skip selectTopic and stopRecording emissions
         expect: () => [
           SpeechAssessmentProcessing(testTopics.first),
           SpeechAssessmentCompleted(testTopics.first, testResult),

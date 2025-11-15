@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'route_names.dart';
-import 'placeholder_screen.dart';
+import 'app_shell.dart';
 import '../../presentation/auth/screens/sign_in_screen.dart';
 import '../../presentation/auth/screens/sign_up_screen.dart';
 import '../../presentation/main/screens/main_screen.dart';
@@ -24,6 +24,12 @@ import '../../presentation/speaking/screens/recording_screen.dart';
 import '../../presentation/speaking/screens/speaking_assessment_screen.dart';
 import '../../presentation/speaking/screens/speaking_results_screen.dart';
 import '../../presentation/speaking/cubit/speech_cubit.dart';
+import '../../presentation/articles/screens/articles_preview_screen.dart';
+import '../../presentation/articles/screens/article_screen.dart';
+import '../../presentation/articles/screens/article_analysis_screen.dart';
+import '../../presentation/articles/cubit/articles_cubit.dart';
+import '../../presentation/profile/screens/profile_screen.dart';
+import '../../presentation/auth/cubit/auth_cubit.dart';
 import '../../core/di/service_locator.dart';
 
 /// Configures all app routes using go_router
@@ -31,14 +37,28 @@ class AppRouter {
   static GoRouter router({bool requireAuth = false}) {
     return GoRouter(
       initialLocation: Routes.main,
-      routes: [
-        // Main
-        GoRoute(
-          path: Routes.main,
-          builder: (context, state) => const MainScreen(),
-        ),
+      redirect: (context, state) async {
+        // Check if user is authenticated
+        final authManager = ServiceLocator().authManager;
+        final user = await authManager.getCurrentUser();
 
-        // Auth
+        final isGoingToAuth = state.matchedLocation == Routes.signIn ||
+                             state.matchedLocation == Routes.signUp;
+
+        if (user == null && !isGoingToAuth) {
+          // Redirect to sign in if not authenticated
+          return Routes.signIn;
+        }
+
+        if (user != null && isGoingToAuth) {
+          // Redirect to main if already authenticated and trying to access auth screens
+          return Routes.main;
+        }
+
+        return null; // No redirect needed
+      },
+      routes: [
+        // Auth routes (no bottom navigation)
         GoRoute(
           path: Routes.signIn,
           builder: (context, state) => const SignInScreen(),
@@ -46,6 +66,63 @@ class AppRouter {
         GoRoute(
           path: Routes.signUp,
           builder: (context, state) => const SignUpScreen(),
+        ),
+
+        // Main routes with bottom navigation shell
+        ShellRoute(
+          builder: (context, state, child) {
+            // Determine current index based on current route
+            int currentIndex = 0;
+            final location = state.matchedLocation;
+            if (location == Routes.main || location == '/') {
+              currentIndex = 0;
+            } else if (location.startsWith('/learn')) {
+              currentIndex = 1;
+            } else if (location.startsWith('/speaking/results')) {
+              currentIndex = 2;
+            } else if (location.startsWith('/profile')) {
+              currentIndex = 3;
+            }
+
+            return BlocProvider(
+              create: (context) => AuthCubit(ServiceLocator().authManager),
+              child: AppShell(
+                currentIndex: currentIndex,
+                child: child,
+              ),
+            );
+          },
+          routes: [
+            // Home tab
+            GoRoute(
+              path: Routes.main,
+              builder: (context, state) => const MainScreen(),
+            ),
+
+            // Practice tab (Learn)
+            GoRoute(
+              path: Routes.learn,
+              builder: (context, state) => const LearnScreen(),
+            ),
+
+            // Progress tab (Speaking Results)
+            GoRoute(
+              path: Routes.speakingResults,
+              builder: (context, state) {
+                ServiceLocator().speechCubit.loadResultsHistory();
+                return BlocProvider.value(
+                  value: ServiceLocator().speechCubit,
+                  child: const SpeakingResultsScreen(),
+                );
+              },
+            ),
+
+            // Profile tab
+            GoRoute(
+              path: Routes.profile,
+              builder: (context, state) => const ProfileScreen(),
+            ),
+          ],
         ),
 
         // FlashCards
@@ -89,11 +166,7 @@ class AppRouter {
           },
         ),
 
-        // Learn
-        GoRoute(
-          path: Routes.learn,
-          builder: (context, state) => const LearnScreen(),
-        ),
+        // Learn sub-routes (without bottom nav)
         GoRoute(
           path: Routes.grammarTopics,
           builder: (context, state) => BlocProvider(
@@ -151,31 +224,26 @@ class AppRouter {
             child: const SpeakingAssessmentScreen(),
           ),
         ),
-        GoRoute(
-          path: Routes.speakingResults,
-          builder: (context, state) {
-            ServiceLocator().speechCubit.loadResultsHistory();
-            return BlocProvider.value(
-              value: ServiceLocator().speechCubit,
-              child: const SpeakingResultsScreen(),
-            );
-          },
-        ),
 
         // Articles
         GoRoute(
           path: Routes.articles,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Articles',
+          builder: (context, state) => BlocProvider(
+            create: (context) => ArticlesCubit(
+              ServiceLocator().networkRepository,
+            )..loadArticles(),
+            child: const ArticlesPreviewScreen(),
           ),
         ),
         GoRoute(
           path: Routes.article,
           builder: (context, state) {
             final articleId = state.pathParameters['articleId'] ?? '';
-            return PlaceholderScreen(
-              routeName: 'Article',
-              params: {'articleId': articleId},
+            return BlocProvider(
+              create: (context) => ArticlesCubit(
+                ServiceLocator().networkRepository,
+              )..loadArticle(articleId),
+              child: ArticleScreen(articleId: articleId),
             );
           },
         ),
@@ -183,9 +251,11 @@ class AppRouter {
           path: Routes.articleAnalysis,
           builder: (context, state) {
             final articleId = state.pathParameters['articleId'] ?? '';
-            return PlaceholderScreen(
-              routeName: 'Article Analysis',
-              params: {'articleId': articleId},
+            return BlocProvider(
+              create: (context) => ArticlesCubit(
+                ServiceLocator().networkRepository,
+              )..analyzeArticle(articleId),
+              child: ArticleAnalysisScreen(articleId: articleId),
             );
           },
         ),

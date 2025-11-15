@@ -11,24 +11,31 @@ class MockNetworkRepository extends Mock implements NetworkRepository {}
 
 class MockAudioManager extends Mock implements AudioManager {}
 
+// Fake class for AudioRecord
+class FakeAudioRecord extends Fake implements AudioRecord {}
+
 void main() {
   group('ListeningCubit', () {
     late MockNetworkRepository mockNetworkRepository;
     late MockAudioManager mockAudioManager;
     late ListeningCubit cubit;
 
+    setUpAll(() {
+      registerFallbackValue(FakeAudioRecord());
+    });
+
     setUp(() {
       mockNetworkRepository = MockNetworkRepository();
       mockAudioManager = MockAudioManager();
       cubit = ListeningCubit(mockNetworkRepository, mockAudioManager);
 
-      // Setup mock streams
+      // Setup mock streams - use empty streams to avoid unwanted emissions during tests
       when(() => mockAudioManager.positionStream)
-          .thenAnswer((_) => Stream.value(Duration.zero));
+          .thenAnswer((_) => const Stream.empty());
       when(() => mockAudioManager.durationStream)
-          .thenAnswer((_) => Stream.value(const Duration(minutes: 2)));
+          .thenAnswer((_) => const Stream.empty());
       when(() => mockAudioManager.playbackStateStream)
-          .thenAnswer((_) => Stream.value(false));
+          .thenAnswer((_) => const Stream.empty());
     });
 
     tearDown(() {

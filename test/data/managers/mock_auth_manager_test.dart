@@ -1,11 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yazich_ok/data/managers/mock_auth_manager.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('MockAuthManager', () {
     late MockAuthManager authManager;
 
-    setUp(() {
+    setUp(() async {
+      // Initialize SharedPreferences with empty values for testing
+      SharedPreferences.setMockInitialValues({});
       authManager = MockAuthManager();
     });
 
@@ -76,12 +81,19 @@ void main() {
     });
 
     test('authStateChanges emits user on sign in', () async {
-      authManager.authStateChanges.listen(expectAsync1((user) {
-        expect(user, isNotNull);
-        expect(user!.email, 'test@example.com');
-      }));
+      // Listen to the stream before signing in
+      final streamFuture = authManager.authStateChanges.first;
 
       await authManager.signIn('test@example.com', 'Password123');
+
+      // Wait for the stream to emit
+      final user = await streamFuture.timeout(
+        const Duration(seconds: 5),
+        onTimeout: () => null,
+      );
+
+      expect(user, isNotNull);
+      expect(user!.email, 'test@example.com');
     });
   });
 }

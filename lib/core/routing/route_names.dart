@@ -32,6 +32,9 @@ class Routes {
   static const String article = '/articles/:articleId';
   static const String articleAnalysis = '/articles/:articleId/analysis';
 
+  // Profile
+  static const String profile = '/profile';
+
   /// Helper methods to build routes with parameters
   static String memoriseWordsPath(String groupId) => '/flashcards/group/$groupId';
   static String testPath(String topicId) => '/learn/test/$topicId';
