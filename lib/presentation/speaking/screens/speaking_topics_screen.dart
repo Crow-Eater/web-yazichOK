@@ -7,8 +7,32 @@ import 'package:yazich_ok/presentation/speaking/cubit/speech_state.dart';
 import 'package:yazich_ok/presentation/speaking/widgets/topic_card.dart';
 
 /// Screen displaying list of speaking practice topics
-class SpeakingTopicsScreen extends StatelessWidget {
+class SpeakingTopicsScreen extends StatefulWidget {
   const SpeakingTopicsScreen({super.key});
+
+  @override
+  State<SpeakingTopicsScreen> createState() => _SpeakingTopicsScreenState();
+}
+
+class _SpeakingTopicsScreenState extends State<SpeakingTopicsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Load topics only if we're in an appropriate state
+    // Don't load if we're in the middle of recording or assessment
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentState = context.read<SpeechCubit>().state;
+      if (currentState is SpeechInitial ||
+          currentState is SpeechTopicsLoading ||
+          currentState is SpeechTopicsLoaded ||
+          currentState is SpeechError) {
+        print('DEBUG: SpeakingTopicsScreen loading topics (state: ${currentState.runtimeType})');
+        context.read<SpeechCubit>().loadTopics();
+      } else {
+        print('DEBUG: SpeakingTopicsScreen skipping loadTopics (state: ${currentState.runtimeType})');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

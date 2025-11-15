@@ -69,10 +69,12 @@ void main() {
       when(() => mockCubit.state).thenReturn(const SpeechTopicsLoading());
       when(() => mockCubit.stream)
           .thenAnswer((_) => Stream.value(const SpeechTopicsLoading()));
+      when(() => mockCubit.loadTopics()).thenAnswer((_) async {});
 
       await tester.pumpWidget(
         makeTestableWidget(const SpeakingTopicsScreen()),
       );
+      await tester.pump(); // Pump for initState callback
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
@@ -83,10 +85,12 @@ void main() {
       when(() => mockCubit.state).thenReturn(const SpeechError(errorMessage));
       when(() => mockCubit.stream)
           .thenAnswer((_) => Stream.value(const SpeechError(errorMessage)));
+      when(() => mockCubit.loadTopics()).thenAnswer((_) async {});
 
       await tester.pumpWidget(
         makeTestableWidget(const SpeakingTopicsScreen()),
       );
+      await tester.pump(); // Pump for initState callback
 
       expect(find.text('Error'), findsOneWidget);
       expect(find.textContaining(errorMessage), findsOneWidget);
@@ -99,10 +103,12 @@ void main() {
           .thenReturn(const SpeechTopicsLoaded([]));
       when(() => mockCubit.stream)
           .thenAnswer((_) => Stream.value(const SpeechTopicsLoaded([])));
+      when(() => mockCubit.loadTopics()).thenAnswer((_) async {});
 
       await tester.pumpWidget(
         makeTestableWidget(const SpeakingTopicsScreen()),
       );
+      await tester.pump(); // Pump for initState callback
 
       expect(find.text('No Topics Available'), findsOneWidget);
       expect(
@@ -114,10 +120,12 @@ void main() {
       when(() => mockCubit.state).thenReturn(SpeechTopicsLoaded(testTopics));
       when(() => mockCubit.stream)
           .thenAnswer((_) => Stream.value(SpeechTopicsLoaded(testTopics)));
+      when(() => mockCubit.loadTopics()).thenAnswer((_) async {});
 
       await tester.pumpWidget(
         makeTestableWidget(const SpeakingTopicsScreen()),
       );
+      await tester.pump(); // Pump for initState callback
 
       expect(find.text('Choose a Topic'), findsOneWidget);
       expect(find.text('Select a topic to practice your speaking skills'),
@@ -130,10 +138,12 @@ void main() {
       when(() => mockCubit.state).thenReturn(SpeechTopicsLoaded(testTopics));
       when(() => mockCubit.stream)
           .thenAnswer((_) => Stream.value(SpeechTopicsLoaded(testTopics)));
+      when(() => mockCubit.loadTopics()).thenAnswer((_) async {});
 
       await tester.pumpWidget(
         makeTestableWidget(const SpeakingTopicsScreen()),
       );
+      await tester.pump(); // Pump for initState callback
 
       // Check first topic details
       expect(find.text('intermediate'), findsOneWidget);
@@ -146,11 +156,13 @@ void main() {
       when(() => mockCubit.state).thenReturn(SpeechTopicsLoaded(testTopics));
       when(() => mockCubit.stream)
           .thenAnswer((_) => Stream.value(SpeechTopicsLoaded(testTopics)));
+      when(() => mockCubit.loadTopics()).thenAnswer((_) async {});
       when(() => mockCubit.selectTopic(any())).thenReturn(null);
 
       await tester.pumpWidget(
         makeTestableWidget(const SpeakingTopicsScreen()),
       );
+      await tester.pump(); // Pump for initState callback
 
       await tester.tap(find.text('Describe your favorite vacation'));
       await tester.pump();

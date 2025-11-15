@@ -6,11 +6,13 @@ import 'package:intl/intl.dart';
 class ResultsHistoryItem extends StatelessWidget {
   final AssessmentResult result;
   final String topicTitle;
+  final VoidCallback? onTap;
 
   const ResultsHistoryItem({
     super.key,
     required this.result,
     required this.topicTitle,
+    this.onTap,
   });
 
   Color _getScoreColor(int score) {
@@ -41,9 +43,12 @@ class ResultsHistoryItem extends StatelessWidget {
 
     return Card(
       elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
           children: [
             // Score Circle
             Container(
@@ -130,6 +135,7 @@ class ResultsHistoryItem extends StatelessWidget {
               color: theme.colorScheme.onSurface.withOpacity(0.3),
             ),
           ],
+        ),
         ),
       ),
     );
