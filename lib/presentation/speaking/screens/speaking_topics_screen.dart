@@ -7,8 +7,22 @@ import 'package:yazich_ok/presentation/speaking/cubit/speech_state.dart';
 import 'package:yazich_ok/presentation/speaking/widgets/topic_card.dart';
 
 /// Screen displaying list of speaking practice topics
-class SpeakingTopicsScreen extends StatelessWidget {
+class SpeakingTopicsScreen extends StatefulWidget {
   const SpeakingTopicsScreen({super.key});
+
+  @override
+  State<SpeakingTopicsScreen> createState() => _SpeakingTopicsScreenState();
+}
+
+class _SpeakingTopicsScreenState extends State<SpeakingTopicsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Load topics only once when screen is first built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SpeechCubit>().loadTopics();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
