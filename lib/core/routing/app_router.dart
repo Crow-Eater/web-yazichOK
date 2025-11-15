@@ -37,6 +37,26 @@ class AppRouter {
   static GoRouter router({bool requireAuth = false}) {
     return GoRouter(
       initialLocation: Routes.main,
+      redirect: (context, state) async {
+        // Check if user is authenticated
+        final authManager = ServiceLocator().authManager;
+        final user = await authManager.getCurrentUser();
+
+        final isGoingToAuth = state.matchedLocation == Routes.signIn ||
+                             state.matchedLocation == Routes.signUp;
+
+        if (user == null && !isGoingToAuth) {
+          // Redirect to sign in if not authenticated
+          return Routes.signIn;
+        }
+
+        if (user != null && isGoingToAuth) {
+          // Redirect to main if already authenticated and trying to access auth screens
+          return Routes.main;
+        }
+
+        return null; // No redirect needed
+      },
       routes: [
         // Auth routes (no bottom navigation)
         GoRoute(

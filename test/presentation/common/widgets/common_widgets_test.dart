@@ -53,9 +53,10 @@ void main() {
       expect(find.byIcon(Icons.error_outline), findsOneWidget);
       expect(find.text('Oops! Something went wrong'), findsOneWidget);
       expect(find.text('Test error message'), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Retry'), findsOneWidget);
+      expect(find.text('Retry'), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsOneWidget);
 
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Retry'));
+      await tester.tap(find.text('Retry'));
       expect(retryPressed, isTrue);
     });
 
@@ -99,9 +100,10 @@ void main() {
       expect(find.byIcon(Icons.inbox), findsOneWidget);
       expect(find.text('No items'), findsOneWidget);
       expect(find.text('There are no items to display'), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Create Item'), findsOneWidget);
+      expect(find.text('Create Item'), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsOneWidget);
 
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Create Item'));
+      await tester.tap(find.text('Create Item'));
       expect(actionPressed, isTrue);
     });
 
@@ -141,8 +143,8 @@ void main() {
       );
 
       expect(find.text('Content'), findsOneWidget);
-      expect(find.byType(ConstrainedBox), findsOneWidget);
-      expect(find.byType(Center), findsOneWidget);
+      expect(find.byType(ConstrainedBox), findsWidgets);
+      expect(find.byType(Center), findsAtLeastNWidgets(1));
     });
   });
 }

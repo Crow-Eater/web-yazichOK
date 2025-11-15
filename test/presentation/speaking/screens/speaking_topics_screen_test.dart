@@ -9,8 +9,15 @@ import 'package:yazich_ok/presentation/speaking/screens/speaking_topics_screen.d
 
 class MockSpeechCubit extends Mock implements SpeechCubit {}
 
+// Fake class for SpeakingTopic
+class FakeSpeakingTopic extends Fake implements SpeakingTopic {}
+
 void main() {
   late MockSpeechCubit mockCubit;
+
+  setUpAll(() {
+    registerFallbackValue(FakeSpeakingTopic());
+  });
 
   setUp(() {
     mockCubit = MockSpeechCubit();

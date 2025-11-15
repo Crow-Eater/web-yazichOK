@@ -11,11 +11,18 @@ class MockNetworkRepository extends Mock implements NetworkRepository {}
 
 class MockAudioManager extends Mock implements AudioManager {}
 
+// Fake class for AudioRecord
+class FakeAudioRecord extends Fake implements AudioRecord {}
+
 void main() {
   group('ListeningCubit', () {
     late MockNetworkRepository mockNetworkRepository;
     late MockAudioManager mockAudioManager;
     late ListeningCubit cubit;
+
+    setUpAll(() {
+      registerFallbackValue(FakeAudioRecord());
+    });
 
     setUp(() {
       mockNetworkRepository = MockNetworkRepository();
