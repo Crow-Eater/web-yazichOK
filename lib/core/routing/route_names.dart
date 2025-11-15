@@ -23,8 +23,8 @@ class Routes {
 
   // Speaking
   static const String speakingTopics = '/speaking/topics';
-  static const String recording = '/speaking/topics/recording';
-  static const String assessment = '/speaking/topics/assessment';
+  static const String recording = '/speaking/recording';
+  static const String assessment = '/speaking/assessment';
   static const String speakingResults = '/speaking/results';
 
   // Articles

@@ -126,36 +126,40 @@ class AppRouter {
           ),
         ),
 
-        // Speaking - Nested routes with shared SpeechCubit
+        // Speaking - All routes use the same singleton SpeechCubit
         GoRoute(
           path: Routes.speakingTopics,
-          builder: (context, state) => BlocProvider(
-            create: (context) => SpeechCubit(
-              ServiceLocator().networkRepository,
-              ServiceLocator().recorderManager,
-            )..loadTopics(),
-            child: const SpeakingTopicsScreen(),
+          builder: (context, state) {
+            ServiceLocator().speechCubit.loadTopics();
+            return BlocProvider.value(
+              value: ServiceLocator().speechCubit,
+              child: const SpeakingTopicsScreen(),
+            );
+          },
+        ),
+        GoRoute(
+          path: Routes.recording,
+          builder: (context, state) => BlocProvider.value(
+            value: ServiceLocator().speechCubit,
+            child: const RecordingScreen(),
           ),
-          routes: [
-            GoRoute(
-              path: 'recording',
-              builder: (context, state) => const RecordingScreen(),
-            ),
-            GoRoute(
-              path: 'assessment',
-              builder: (context, state) => const SpeakingAssessmentScreen(),
-            ),
-          ],
+        ),
+        GoRoute(
+          path: Routes.assessment,
+          builder: (context, state) => BlocProvider.value(
+            value: ServiceLocator().speechCubit,
+            child: const SpeakingAssessmentScreen(),
+          ),
         ),
         GoRoute(
           path: Routes.speakingResults,
-          builder: (context, state) => BlocProvider(
-            create: (context) => SpeechCubit(
-              ServiceLocator().networkRepository,
-              ServiceLocator().recorderManager,
-            )..loadResultsHistory(),
-            child: const SpeakingResultsScreen(),
-          ),
+          builder: (context, state) {
+            ServiceLocator().speechCubit.loadResultsHistory();
+            return BlocProvider.value(
+              value: ServiceLocator().speechCubit,
+              child: const SpeakingResultsScreen(),
+            );
+          },
         ),
 
         // Articles
