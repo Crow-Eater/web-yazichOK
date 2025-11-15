@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_yazichok/data/models/audio_record.dart';
-import 'package:web_yazichok/domain/managers/audio_manager.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/presentation/learn/cubit/listening_state.dart';
+import 'package:yazich_ok/data/models/audio_record.dart';
+import 'package:yazich_ok/domain/managers/audio_manager.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/presentation/learn/cubit/listening_state.dart';
 
 /// Cubit for managing Listening Practice state
 class ListeningCubit extends Cubit<ListeningState> {
@@ -166,7 +166,7 @@ class ListeningCubit extends Cubit<ListeningState> {
   @override
   Future<void> close() async {
     await _cancelSubscriptions();
-    await _audioManager.dispose();
+    _audioManager.dispose();
     return super.close();
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_yazichok/data/models/flash_card.dart';
-import 'package:web_yazichok/data/models/word_group.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/flashcards_state.dart';
+import 'package:yazich_ok/data/models/flash_card.dart';
+import 'package:yazich_ok/data/models/word_group.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/flashcards_state.dart';
 
 /// Cubit for managing FlashCards feature state
 class FlashCardsCubit extends Cubit<FlashCardsState> {

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:web_yazichok/data/models/audio_record.dart';
+import 'package:yazich_ok/data/models/audio_record.dart';
 
 /// Base state for Listening Practice feature
 abstract class ListeningState extends Equatable {

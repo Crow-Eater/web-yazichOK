@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/flash_card.dart';
+import 'package:yazich_ok/data/models/flash_card.dart';
 
 /// Widget for displaying a flashcard with word, transcription, and translation
 class FlashcardWidget extends StatelessWidget {

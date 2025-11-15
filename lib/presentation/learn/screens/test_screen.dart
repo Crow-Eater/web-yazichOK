@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_yazichok/core/routing/route_names.dart';
-import 'package:web_yazichok/presentation/learn/cubit/test_cubit.dart';
-import 'package:web_yazichok/presentation/learn/cubit/test_state.dart';
-import 'package:web_yazichok/presentation/learn/widgets/question_card.dart';
-import 'package:web_yazichok/presentation/learn/widgets/result_card.dart';
-import 'package:web_yazichok/presentation/learn/widgets/summary_card.dart';
+import 'package:yazich_ok/core/routing/route_names.dart';
+import 'package:yazich_ok/presentation/learn/cubit/test_cubit.dart';
+import 'package:yazich_ok/presentation/learn/cubit/test_state.dart';
+import 'package:yazich_ok/presentation/learn/widgets/question_card.dart';
+import 'package:yazich_ok/presentation/learn/widgets/result_card.dart';
+import 'package:yazich_ok/presentation/learn/widgets/summary_card.dart';
 
 /// Screen for taking a grammar test
 class TestScreen extends StatelessWidget {

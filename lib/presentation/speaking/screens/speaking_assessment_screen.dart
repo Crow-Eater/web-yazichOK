@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_cubit.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_state.dart';
-import 'package:web_yazichok/presentation/speaking/widgets/assessment_results_card.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_cubit.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_state.dart';
+import 'package:yazich_ok/presentation/speaking/widgets/assessment_results_card.dart';
 
 /// Screen for displaying speaking assessment results
 class SpeakingAssessmentScreen extends StatelessWidget {

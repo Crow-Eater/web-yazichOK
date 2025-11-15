@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:web_yazichok/data/models/question.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/presentation/learn/cubit/test_cubit.dart';
-import 'package:web_yazichok/presentation/learn/cubit/test_state.dart';
+import 'package:yazich_ok/data/models/question.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/presentation/learn/cubit/test_cubit.dart';
+import 'package:yazich_ok/presentation/learn/cubit/test_state.dart';
 
 class MockNetworkRepository extends Mock implements NetworkRepository {}
 
@@ -27,14 +27,14 @@ void main() {
         id: 'q-1',
         text: 'Choose the correct article',
         options: ['A', 'An', 'The', 'No article'],
-        correctOptionIndex: 1,
+        correctIndex: 1,
         explanation: 'Use "An" before vowel sounds',
       ),
       Question(
         id: 'q-2',
         text: 'Select the right tense',
         options: ['go', 'goes', 'went', 'gone'],
-        correctOptionIndex: 2,
+        correctIndex: 2,
       ),
     ];
 

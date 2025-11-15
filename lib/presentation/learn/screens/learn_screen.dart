@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_yazichok/core/routing/route_names.dart';
-import 'package:web_yazichok/presentation/learn/widgets/learning_option_card.dart';
+import 'package:yazich_ok/core/routing/route_names.dart';
+import 'package:yazich_ok/presentation/learn/widgets/learning_option_card.dart';
 
 /// Main Learn screen - hub for grammar tests and listening practice
 class LearnScreen extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_yazichok/presentation/learn/cubit/listening_cubit.dart';
-import 'package:web_yazichok/presentation/learn/cubit/listening_state.dart';
-import 'package:web_yazichok/presentation/learn/widgets/audio_player_card.dart';
-import 'package:web_yazichok/presentation/learn/widgets/audio_record_list.dart';
+import 'package:yazich_ok/presentation/learn/cubit/listening_cubit.dart';
+import 'package:yazich_ok/presentation/learn/cubit/listening_state.dart';
+import 'package:yazich_ok/presentation/learn/widgets/audio_player_card.dart';
+import 'package:yazich_ok/presentation/learn/widgets/audio_record_list.dart';
 
 /// Screen for listening practice with audio player
 class ListeningPracticeScreen extends StatelessWidget {

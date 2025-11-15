@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_yazichok/core/routing/route_names.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/flashcards_cubit.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/flashcards_state.dart';
-import 'package:web_yazichok/presentation/flashcards/widgets/group_list_item.dart';
+import 'package:yazich_ok/core/routing/route_names.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/flashcards_cubit.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/flashcards_state.dart';
+import 'package:yazich_ok/presentation/flashcards/widgets/group_list_item.dart';
 
 /// Main screen for FlashCards feature
 /// Displays list of word groups and navigation to add words/groups

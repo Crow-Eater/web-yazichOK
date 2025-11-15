@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:web_yazichok/data/models/grammar_topic.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/presentation/learn/cubit/grammar_topics_cubit.dart';
-import 'package:web_yazichok/presentation/learn/cubit/grammar_topics_state.dart';
+import 'package:yazich_ok/data/models/grammar_topic.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/presentation/learn/cubit/grammar_topics_cubit.dart';
+import 'package:yazich_ok/presentation/learn/cubit/grammar_topics_state.dart';
 
 class MockNetworkRepository extends Mock implements NetworkRepository {}
 

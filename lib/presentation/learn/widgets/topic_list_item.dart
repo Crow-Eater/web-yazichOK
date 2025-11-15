@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/grammar_topic.dart';
+import 'package:yazich_ok/data/models/grammar_topic.dart';
 
 /// Widget for displaying a grammar topic in the list
 class TopicListItem extends StatelessWidget {

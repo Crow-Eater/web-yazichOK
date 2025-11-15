@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:web_yazichok/data/models/word_group.dart';
+import 'package:yazich_ok/data/models/word_group.dart';
 
 /// Base state for FlashCards feature
 abstract class FlashCardsState extends Equatable {

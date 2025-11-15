@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/question.dart';
+import 'package:yazich_ok/data/models/question.dart';
 
 /// Widget for displaying result after checking answer
 class ResultCard extends StatelessWidget {
@@ -92,7 +92,7 @@ class ResultCard extends StatelessWidget {
                           child: Center(
                             child: Text(
                               String.fromCharCode(
-                                  65 + question.correctOptionIndex),
+                                  65 + question.correctIndex),
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -103,7 +103,7 @@ class ResultCard extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            question.options[question.correctOptionIndex],
+                            question.options[question.correctIndex],
                             style: theme.textTheme.bodyLarge,
                           ),
                         ),

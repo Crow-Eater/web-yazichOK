@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:web_yazichok/data/models/audio_record.dart';
-import 'package:web_yazichok/domain/managers/audio_manager.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/presentation/learn/cubit/listening_cubit.dart';
-import 'package:web_yazichok/presentation/learn/cubit/listening_state.dart';
+import 'package:yazich_ok/data/models/audio_record.dart';
+import 'package:yazich_ok/domain/managers/audio_manager.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/presentation/learn/cubit/listening_cubit.dart';
+import 'package:yazich_ok/presentation/learn/cubit/listening_state.dart';
 
 class MockNetworkRepository extends Mock implements NetworkRepository {}
 
@@ -40,12 +40,14 @@ void main() {
         id: 'a-1',
         title: 'Travel Dialogue',
         asset: 'assets/audio/travel.mp3',
+        duration: '3:30',
         difficulty: 'beginner',
       ),
       AudioRecord(
         id: 'a-2',
         title: 'Shopping Exercise',
         asset: 'assets/audio/shopping.mp3',
+        duration: '2:45',
       ),
     ];
 

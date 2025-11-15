@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/domain/managers/recorder_manager.dart';
-import 'package:web_yazichok/data/models/speaking_topic.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_state.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/domain/managers/recorder_manager.dart';
+import 'package:yazich_ok/data/models/speaking_topic.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_state.dart';
 
 /// Cubit for managing speaking practice state
 class SpeechCubit extends Cubit<SpeechState> {
@@ -129,7 +129,7 @@ class SpeechCubit extends Cubit<SpeechState> {
   Future<void> loadResultsHistory() async {
     try {
       emit(const SpeechResultsLoading());
-      final results = await _networkRepository.getAssessmentResults();
+      final results = await _networkRepository.getAssessmentHistory();
       final topics = await _networkRepository.getSpeakingTopics();
 
       // Create a map of topic IDs to topics for easy lookup

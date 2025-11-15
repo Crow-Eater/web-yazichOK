@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/assessment_result.dart';
+import 'package:yazich_ok/data/models/assessment_result.dart';
 
 /// Card widget for displaying assessment results with scores
 class AssessmentResultsCard extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:web_yazichok/presentation/learn/screens/learn_screen.dart';
+import 'package:yazich_ok/presentation/learn/screens/learn_screen.dart';
 
 void main() {
   Widget makeTestableWidget() {

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/presentation/learn/cubit/grammar_topics_state.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/presentation/learn/cubit/grammar_topics_state.dart';
 
 /// Cubit for managing Grammar Topics state
 class GrammarTopicsCubit extends Cubit<GrammarTopicsState> {

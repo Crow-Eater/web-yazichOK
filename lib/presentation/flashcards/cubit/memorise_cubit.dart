@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_yazichok/data/models/flash_card.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/memorise_state.dart';
+import 'package:yazich_ok/data/models/flash_card.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/memorise_state.dart';
 
 /// Cubit for managing memorisation flow state
 class MemoriseCubit extends Cubit<MemoriseState> {

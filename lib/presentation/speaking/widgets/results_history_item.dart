@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/assessment_result.dart';
+import 'package:yazich_ok/data/models/assessment_result.dart';
 import 'package:intl/intl.dart';
 
 /// List item widget for displaying a single assessment result

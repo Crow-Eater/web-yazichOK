@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_yazichok/core/routing/route_names.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/memorise_cubit.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/memorise_state.dart';
-import 'package:web_yazichok/presentation/flashcards/widgets/flashcard_widget.dart';
-import 'package:web_yazichok/presentation/flashcards/widgets/statistics_card.dart';
+import 'package:yazich_ok/core/routing/route_names.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/memorise_cubit.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/memorise_state.dart';
+import 'package:yazich_ok/presentation/flashcards/widgets/flashcard_widget.dart';
+import 'package:yazich_ok/presentation/flashcards/widgets/statistics_card.dart';
 
 /// Screen for memorizing words from a group
 /// Shows flashcards one at a time with know/don't know options

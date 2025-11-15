@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_yazichok/data/models/question.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/presentation/learn/cubit/test_state.dart';
+import 'package:yazich_ok/data/models/question.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/presentation/learn/cubit/test_state.dart';
 
 /// Cubit for managing Test flow state
 class TestCubit extends Cubit<TestState> {
@@ -58,7 +58,7 @@ class TestCubit extends Cubit<TestState> {
 
     final question = currentState.question;
     final selectedIndex = currentState.selectedOptionIndex!;
-    final isCorrect = selectedIndex == question.correctOptionIndex;
+    final isCorrect = selectedIndex == question.correctIndex;
 
     if (isCorrect) {
       _correctAnswersCount++;

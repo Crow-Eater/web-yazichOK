@@ -1,12 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:web_yazichok/data/models/speaking_topic.dart';
-import 'package:web_yazichok/data/models/assessment_result.dart';
-import 'package:web_yazichok/domain/repositories/network_repository.dart';
-import 'package:web_yazichok/domain/managers/recorder_manager.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_cubit.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_state.dart';
+import 'package:yazich_ok/data/models/speaking_topic.dart';
+import 'package:yazich_ok/data/models/assessment_result.dart';
+import 'package:yazich_ok/domain/repositories/network_repository.dart';
+import 'package:yazich_ok/domain/managers/recorder_manager.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_cubit.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_state.dart';
 
 class MockNetworkRepository extends Mock implements NetworkRepository {}
 
@@ -179,7 +179,7 @@ void main() {
       blocTest<SpeechCubit, SpeechState>(
         'emits [SpeechResultsLoading, SpeechResultsLoaded] when successful',
         build: () {
-          when(() => mockNetworkRepository.getAssessmentResults())
+          when(() => mockNetworkRepository.getAssessmentHistory())
               .thenAnswer((_) async => [testResult]);
           when(() => mockNetworkRepository.getSpeakingTopics())
               .thenAnswer((_) async => testTopics);
@@ -193,7 +193,7 @@ void main() {
               .having((s) => s.topicMap.length, 'topicMap.length', 2),
         ],
         verify: (_) {
-          verify(() => mockNetworkRepository.getAssessmentResults()).called(1);
+          verify(() => mockNetworkRepository.getAssessmentHistory()).called(1);
           verify(() => mockNetworkRepository.getSpeakingTopics()).called(1);
         },
       );

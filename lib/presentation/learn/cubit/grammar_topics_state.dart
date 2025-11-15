@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:web_yazichok/data/models/grammar_topic.dart';
+import 'package:yazich_ok/data/models/grammar_topic.dart';
 
 /// Base state for Grammar Topics feature
 abstract class GrammarTopicsState extends Equatable {

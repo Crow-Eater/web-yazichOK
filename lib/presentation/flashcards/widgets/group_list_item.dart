@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/word_group.dart';
+import 'package:yazich_ok/data/models/word_group.dart';
 
 /// Widget for displaying a word group in the list
 class GroupListItem extends StatelessWidget {

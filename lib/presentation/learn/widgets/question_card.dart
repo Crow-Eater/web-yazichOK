@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/question.dart';
+import 'package:yazich_ok/data/models/question.dart';
 
 /// Widget for displaying a question with answer options
 class QuestionCard extends StatelessWidget {

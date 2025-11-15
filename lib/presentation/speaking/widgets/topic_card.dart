@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/speaking_topic.dart';
+import 'package:yazich_ok/data/models/speaking_topic.dart';
 
 /// Card widget for displaying a speaking topic
 class TopicCard extends StatelessWidget {

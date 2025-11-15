@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:web_yazichok/data/models/speaking_topic.dart';
-import 'package:web_yazichok/data/models/assessment_result.dart';
+import 'package:yazich_ok/data/models/speaking_topic.dart';
+import 'package:yazich_ok/data/models/assessment_result.dart';
 
 /// Base class for all speech states
 abstract class SpeechState extends Equatable {

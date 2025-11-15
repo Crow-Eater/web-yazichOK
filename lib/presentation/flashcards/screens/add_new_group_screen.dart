@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/flashcards_cubit.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/flashcards_state.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/flashcards_cubit.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/flashcards_state.dart';
 
 /// Screen for adding a new word group
 class AddNewGroupScreen extends StatefulWidget {

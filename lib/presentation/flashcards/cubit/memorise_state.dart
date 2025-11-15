@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:web_yazichok/data/models/flash_card.dart';
+import 'package:yazich_ok/data/models/flash_card.dart';
 
 /// Base state for Memorise feature
 abstract class MemoriseState extends Equatable {

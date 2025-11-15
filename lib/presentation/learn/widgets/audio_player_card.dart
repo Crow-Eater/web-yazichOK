@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_yazichok/data/models/audio_record.dart';
+import 'package:yazich_ok/data/models/audio_record.dart';
 
 /// Widget for displaying audio player controls
 class AudioPlayerCard extends StatelessWidget {

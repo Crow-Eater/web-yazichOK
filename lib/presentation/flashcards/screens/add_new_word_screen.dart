@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:web_yazichok/core/routing/route_names.dart';
-import 'package:web_yazichok/data/models/flash_card.dart';
-import 'package:web_yazichok/data/models/word_group.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/flashcards_cubit.dart';
-import 'package:web_yazichok/presentation/flashcards/cubit/flashcards_state.dart';
+import 'package:yazich_ok/core/routing/route_names.dart';
+import 'package:yazich_ok/data/models/flash_card.dart';
+import 'package:yazich_ok/data/models/word_group.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/flashcards_cubit.dart';
+import 'package:yazich_ok/presentation/flashcards/cubit/flashcards_state.dart';
 
 /// Screen for adding a new word to a group
 class AddNewWordScreen extends StatefulWidget {

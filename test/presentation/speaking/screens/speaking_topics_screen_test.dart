@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:web_yazichok/data/models/speaking_topic.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_cubit.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_state.dart';
-import 'package:web_yazichok/presentation/speaking/screens/speaking_topics_screen.dart';
+import 'package:yazich_ok/data/models/speaking_topic.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_cubit.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_state.dart';
+import 'package:yazich_ok/presentation/speaking/screens/speaking_topics_screen.dart';
 
 class MockSpeechCubit extends Mock implements SpeechCubit {}
 

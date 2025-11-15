@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_cubit.dart';
-import 'package:web_yazichok/presentation/speaking/cubit/speech_state.dart';
-import 'package:web_yazichok/presentation/speaking/widgets/results_history_item.dart';
-import 'package:web_yazichok/presentation/speaking/widgets/statistics_section.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_cubit.dart';
+import 'package:yazich_ok/presentation/speaking/cubit/speech_state.dart';
+import 'package:yazich_ok/presentation/speaking/widgets/results_history_item.dart';
+import 'package:yazich_ok/presentation/speaking/widgets/statistics_section.dart';
 
 /// Screen for viewing speaking assessment results history
 class SpeakingResultsScreen extends StatelessWidget {

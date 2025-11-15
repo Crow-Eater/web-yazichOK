@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:web_yazichok/data/models/question.dart';
+import 'package:yazich_ok/data/models/question.dart';
 
 /// Base state for Test feature
 abstract class TestState extends Equatable {
