@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yazich_ok/data/models/speaking_topic.dart';
 import 'package:yazich_ok/presentation/speaking/cubit/speech_cubit.dart';
@@ -24,11 +25,24 @@ void main() {
   });
 
   Widget makeTestableWidget(Widget child) {
-    return MaterialApp(
-      home: BlocProvider<SpeechCubit>.value(
-        value: mockCubit,
-        child: child,
-      ),
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => BlocProvider<SpeechCubit>.value(
+            value: mockCubit,
+            child: child,
+          ),
+        ),
+        GoRoute(
+          path: '/recording',
+          builder: (context, state) => const Scaffold(body: Text('Recording')),
+        ),
+      ],
+    );
+
+    return MaterialApp.router(
+      routerConfig: router,
     );
   }
 

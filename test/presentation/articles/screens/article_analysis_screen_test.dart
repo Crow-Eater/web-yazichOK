@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yazich_ok/presentation/articles/screens/article_analysis_screen.dart';
 import 'package:yazich_ok/presentation/articles/cubit/articles_cubit.dart';
@@ -21,11 +22,20 @@ void main() {
   });
 
   Widget createTestWidget() {
-    return MaterialApp(
-      home: BlocProvider<ArticlesCubit>.value(
-        value: mockCubit,
-        child: const ArticleAnalysisScreen(articleId: 'art-1'),
-      ),
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => BlocProvider<ArticlesCubit>.value(
+            value: mockCubit,
+            child: const ArticleAnalysisScreen(articleId: 'art-1'),
+          ),
+        ),
+      ],
+    );
+
+    return MaterialApp.router(
+      routerConfig: router,
     );
   }
 

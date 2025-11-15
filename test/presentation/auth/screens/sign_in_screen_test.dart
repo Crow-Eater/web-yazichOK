@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yazich_ok/core/di/service_locator.dart';
 import 'package:yazich_ok/domain/managers/auth_manager.dart';
@@ -31,12 +32,30 @@ void main() {
     });
 
     Widget createScreen() {
-      return MaterialApp(
+      final router = GoRouter(
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) => const Scaffold(body: Text('Main')),
+          ),
+          GoRoute(
+            path: '/signin',
+            builder: (context, state) => BlocProvider<AuthCubit>(
+              create: (_) => AuthCubit(authManager),
+              child: const SignInScreen(),
+            ),
+          ),
+          GoRoute(
+            path: '/signup',
+            builder: (context, state) => const Scaffold(body: Text('Sign Up')),
+          ),
+        ],
+        initialLocation: '/signin',
+      );
+
+      return MaterialApp.router(
         theme: AppTheme.lightTheme,
-        home: BlocProvider<AuthCubit>(
-          create: (_) => AuthCubit(authManager),
-          child: const SignInScreen(),
-        ),
+        routerConfig: router,
       );
     }
 

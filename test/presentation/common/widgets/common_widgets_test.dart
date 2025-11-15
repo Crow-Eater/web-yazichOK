@@ -57,6 +57,7 @@ void main() {
       expect(find.byType(ElevatedButton), findsOneWidget);
 
       await tester.tap(find.text('Retry'));
+      await tester.pump();
       expect(retryPressed, isTrue);
     });
 
@@ -104,6 +105,7 @@ void main() {
       expect(find.byType(ElevatedButton), findsOneWidget);
 
       await tester.tap(find.text('Create Item'));
+      await tester.pump();
       expect(actionPressed, isTrue);
     });
 

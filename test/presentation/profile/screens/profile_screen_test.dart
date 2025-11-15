@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yazich_ok/presentation/profile/screens/profile_screen.dart';
 import 'package:yazich_ok/presentation/auth/cubit/auth_cubit.dart';
@@ -18,11 +19,24 @@ void main() {
   });
 
   Widget createTestWidget() {
-    return MaterialApp(
-      home: BlocProvider<AuthCubit>.value(
-        value: mockAuthCubit,
-        child: const ProfileScreen(),
-      ),
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => BlocProvider<AuthCubit>.value(
+            value: mockAuthCubit,
+            child: const ProfileScreen(),
+          ),
+        ),
+        GoRoute(
+          path: '/signin',
+          builder: (context, state) => const Scaffold(body: Text('Sign In')),
+        ),
+      ],
+    );
+
+    return MaterialApp.router(
+      routerConfig: router,
     );
   }
 

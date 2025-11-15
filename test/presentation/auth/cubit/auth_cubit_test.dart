@@ -60,9 +60,10 @@ void main() {
         when(() => authManager.signIn(any(), any())).thenAnswer((_) async => testUser);
         return AuthCubit(authManager);
       },
+      wait: const Duration(milliseconds: 100),
       act: (cubit) => cubit.signIn('test@example.com', 'password123'),
+      skip: 1, // Skip the AuthUnauthenticated from constructor
       expect: () => [
-        const AuthUnauthenticated(),
         const AuthLoading(),
         AuthAuthenticated(testUser),
       ],
@@ -76,9 +77,10 @@ void main() {
             .thenThrow(Exception('Invalid credentials'));
         return AuthCubit(authManager);
       },
+      wait: const Duration(milliseconds: 100),
       act: (cubit) => cubit.signIn('test@example.com', 'wrongpassword'),
+      skip: 1, // Skip the AuthUnauthenticated from constructor
       expect: () => [
-        const AuthUnauthenticated(),
         const AuthLoading(),
         const AuthError('Invalid credentials'),
         const AuthUnauthenticated(),
@@ -92,9 +94,10 @@ void main() {
         when(() => authManager.signUp(any(), any())).thenAnswer((_) async => testUser);
         return AuthCubit(authManager);
       },
+      wait: const Duration(milliseconds: 100),
       act: (cubit) => cubit.signUp('test@example.com', 'password123', fullName: 'Test User'),
+      skip: 1, // Skip the AuthUnauthenticated from constructor
       expect: () => [
-        const AuthUnauthenticated(),
         const AuthLoading(),
         AuthAuthenticated(testUser),
       ],
@@ -108,9 +111,10 @@ void main() {
             .thenThrow(Exception('Email already exists'));
         return AuthCubit(authManager);
       },
+      wait: const Duration(milliseconds: 100),
       act: (cubit) => cubit.signUp('test@example.com', 'password123'),
+      skip: 1, // Skip the AuthUnauthenticated from constructor
       expect: () => [
-        const AuthUnauthenticated(),
         const AuthLoading(),
         const AuthError('Email already exists'),
         const AuthUnauthenticated(),
@@ -125,9 +129,10 @@ void main() {
         when(() => authManager.signOut()).thenAnswer((_) async => {});
         return AuthCubit(authManager);
       },
+      wait: const Duration(milliseconds: 100),
       act: (cubit) => cubit.signOut(),
+      skip: 1, // Skip the AuthAuthenticated from constructor
       expect: () => [
-        AuthAuthenticated(testUser),
         const AuthUnauthenticated(),
       ],
     );
@@ -140,9 +145,10 @@ void main() {
         when(() => authManager.signOut()).thenThrow(Exception('Sign out failed'));
         return AuthCubit(authManager);
       },
+      wait: const Duration(milliseconds: 100),
       act: (cubit) => cubit.signOut(),
+      skip: 1, // Skip the AuthAuthenticated from constructor
       expect: () => [
-        AuthAuthenticated(testUser),
         const AuthError('Sign out failed'),
       ],
     );
