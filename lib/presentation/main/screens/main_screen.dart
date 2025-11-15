@@ -115,7 +115,7 @@ class _MainContent extends StatelessWidget {
                                 icon: Icons.mic,
                                 gradient: AppTheme.blueGradient,
                                 onTap: () {
-                                  context.push('/practice/speaking');
+                                  context.push('/speaking/topics');
                                 },
                               ),
                             ),
@@ -129,7 +129,7 @@ class _MainContent extends StatelessWidget {
                                 icon: Icons.style,
                                 gradient: AppTheme.purpleGradient,
                                 onTap: () {
-                                  context.push('/practice/flashcards');
+                                  context.push('/flashcards');
                                 },
                               ),
                             ),
@@ -243,16 +243,39 @@ class _MainContent extends StatelessWidget {
             // Handle navigation
             switch (index) {
               case 0:
-                // Already on home
+                // Already on home - navigate to main if not there
+                context.go('/');
                 break;
               case 1:
-                context.push('/practice');
+                // Practice - navigate to Learn screen
+                context.push('/learn');
                 break;
               case 2:
-                context.push('/progress');
+                // Progress - navigate to speaking results
+                context.push('/speaking/results');
                 break;
               case 3:
-                context.push('/profile');
+                // Profile - sign out for now (placeholder)
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Profile'),
+                    content: const Text('Profile screen coming soon!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          context.read<AuthCubit>().signOut();
+                        },
+                        child: const Text('Sign Out'),
+                      ),
+                    ],
+                  ),
+                );
                 break;
             }
           },

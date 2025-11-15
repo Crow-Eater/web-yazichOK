@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'route_names.dart';
 import 'placeholder_screen.dart';
 import '../../presentation/auth/screens/sign_in_screen.dart';
 import '../../presentation/auth/screens/sign_up_screen.dart';
 import '../../presentation/main/screens/main_screen.dart';
+import '../../presentation/flashcards/screens/flashcards_screen.dart';
+import '../../presentation/flashcards/screens/add_new_word_screen.dart';
+import '../../presentation/flashcards/screens/add_new_group_screen.dart';
+import '../../presentation/flashcards/screens/memorise_words_screen.dart';
+import '../../presentation/flashcards/cubit/flashcards_cubit.dart';
+import '../../presentation/flashcards/cubit/memorise_cubit.dart';
+import '../../presentation/learn/screens/learn_screen.dart';
+import '../../presentation/learn/screens/grammar_topics_screen.dart';
+import '../../presentation/learn/screens/test_screen.dart';
+import '../../presentation/learn/screens/listening_practice_screen.dart';
+import '../../presentation/learn/cubit/grammar_topics_cubit.dart';
+import '../../presentation/learn/cubit/test_cubit.dart';
+import '../../presentation/learn/cubit/listening_cubit.dart';
+import '../../presentation/speaking/screens/speaking_topics_screen.dart';
+import '../../presentation/speaking/screens/recording_screen.dart';
+import '../../presentation/speaking/screens/speaking_assessment_screen.dart';
+import '../../presentation/speaking/screens/speaking_results_screen.dart';
+import '../../presentation/speaking/cubit/speech_cubit.dart';
+import '../../core/di/service_locator.dart';
 
 /// Configures all app routes using go_router
 class AppRouter {
@@ -31,29 +51,40 @@ class AppRouter {
         // FlashCards
         GoRoute(
           path: Routes.flashcards,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'FlashCards',
+          builder: (context, state) => BlocProvider(
+            create: (context) => FlashCardsCubit(
+              ServiceLocator().networkRepository,
+            )..loadGroups(),
+            child: const FlashCardsScreen(),
           ),
         ),
         GoRoute(
           path: Routes.addWord,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Add Word',
+          builder: (context, state) => BlocProvider(
+            create: (context) => FlashCardsCubit(
+              ServiceLocator().networkRepository,
+            )..loadGroups(),
+            child: const AddNewWordScreen(),
           ),
         ),
         GoRoute(
           path: Routes.addGroup,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Add Group',
+          builder: (context, state) => BlocProvider(
+            create: (context) => FlashCardsCubit(
+              ServiceLocator().networkRepository,
+            ),
+            child: const AddNewGroupScreen(),
           ),
         ),
         GoRoute(
           path: Routes.memoriseWords,
           builder: (context, state) {
             final groupId = state.pathParameters['groupId'] ?? '';
-            return PlaceholderScreen(
-              routeName: 'Memorise Words',
-              params: {'groupId': groupId},
+            return BlocProvider(
+              create: (context) => MemoriseCubit(
+                ServiceLocator().networkRepository,
+              )..loadGroup(groupId),
+              child: MemoriseWordsScreen(groupId: groupId),
             );
           },
         ),
@@ -61,57 +92,74 @@ class AppRouter {
         // Learn
         GoRoute(
           path: Routes.learn,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Learn',
-          ),
+          builder: (context, state) => const LearnScreen(),
         ),
         GoRoute(
           path: Routes.grammarTopics,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Grammar Topics',
+          builder: (context, state) => BlocProvider(
+            create: (context) => GrammarTopicsCubit(
+              ServiceLocator().networkRepository,
+            )..loadTopics(),
+            child: const GrammarTopicsScreen(),
           ),
         ),
         GoRoute(
           path: Routes.test,
           builder: (context, state) {
             final topicId = state.pathParameters['topicId'] ?? '';
-            return PlaceholderScreen(
-              routeName: 'Test',
-              params: {'topicId': topicId},
+            return BlocProvider(
+              create: (context) => TestCubit(
+                ServiceLocator().networkRepository,
+              )..loadTopic(topicId),
+              child: TestScreen(topicId: topicId),
             );
           },
         ),
         GoRoute(
           path: Routes.listening,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Listening Practice',
+          builder: (context, state) => BlocProvider(
+            create: (context) => ListeningCubit(
+              ServiceLocator().networkRepository,
+              ServiceLocator().audioManager,
+            )..loadRecords(),
+            child: const ListeningPracticeScreen(),
           ),
         ),
 
-        // Speaking
+        // Speaking - All routes use the same singleton SpeechCubit
         GoRoute(
           path: Routes.speakingTopics,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Speaking Topics',
-          ),
+          builder: (context, state) {
+            ServiceLocator().speechCubit.loadTopics();
+            return BlocProvider.value(
+              value: ServiceLocator().speechCubit,
+              child: const SpeakingTopicsScreen(),
+            );
+          },
         ),
         GoRoute(
           path: Routes.recording,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Recording',
+          builder: (context, state) => BlocProvider.value(
+            value: ServiceLocator().speechCubit,
+            child: const RecordingScreen(),
           ),
         ),
         GoRoute(
           path: Routes.assessment,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Speaking Assessment',
+          builder: (context, state) => BlocProvider.value(
+            value: ServiceLocator().speechCubit,
+            child: const SpeakingAssessmentScreen(),
           ),
         ),
         GoRoute(
           path: Routes.speakingResults,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Speaking Results',
-          ),
+          builder: (context, state) {
+            ServiceLocator().speechCubit.loadResultsHistory();
+            return BlocProvider.value(
+              value: ServiceLocator().speechCubit,
+              child: const SpeakingResultsScreen(),
+            );
+          },
         ),
 
         // Articles

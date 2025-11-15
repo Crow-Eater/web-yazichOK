@@ -6,6 +6,7 @@ import '../../data/repositories/mock_network_repository.dart';
 import '../../data/managers/mock_auth_manager.dart';
 import '../../data/managers/local_audio_manager.dart';
 import '../../data/managers/web_recorder_manager.dart';
+import '../../presentation/speaking/cubit/speech_cubit.dart';
 
 /// Service Locator for dependency injection
 /// Provides singleton instances of repositories and managers
@@ -20,6 +21,11 @@ class ServiceLocator {
   late AuthManager authManager;
   late AudioManager audioManager;
   late RecorderManager recorderManager;
+
+  // Lazy-initialized cubits for routes that need shared state
+  late final SpeechCubit _speechCubit = SpeechCubit(networkRepository, recorderManager);
+
+  SpeechCubit get speechCubit => _speechCubit;
 
   bool _isInitialized = false;
 
