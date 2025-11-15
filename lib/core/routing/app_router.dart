@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'route_names.dart';
-import 'placeholder_screen.dart';
 import '../../presentation/auth/screens/sign_in_screen.dart';
 import '../../presentation/auth/screens/sign_up_screen.dart';
 import '../../presentation/main/screens/main_screen.dart';
@@ -24,6 +23,10 @@ import '../../presentation/speaking/screens/recording_screen.dart';
 import '../../presentation/speaking/screens/speaking_assessment_screen.dart';
 import '../../presentation/speaking/screens/speaking_results_screen.dart';
 import '../../presentation/speaking/cubit/speech_cubit.dart';
+import '../../presentation/articles/screens/articles_preview_screen.dart';
+import '../../presentation/articles/screens/article_screen.dart';
+import '../../presentation/articles/screens/article_analysis_screen.dart';
+import '../../presentation/articles/cubit/articles_cubit.dart';
 import '../../core/di/service_locator.dart';
 
 /// Configures all app routes using go_router
@@ -165,17 +168,22 @@ class AppRouter {
         // Articles
         GoRoute(
           path: Routes.articles,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Articles',
+          builder: (context, state) => BlocProvider(
+            create: (context) => ArticlesCubit(
+              ServiceLocator().networkRepository,
+            )..loadArticles(),
+            child: const ArticlesPreviewScreen(),
           ),
         ),
         GoRoute(
           path: Routes.article,
           builder: (context, state) {
             final articleId = state.pathParameters['articleId'] ?? '';
-            return PlaceholderScreen(
-              routeName: 'Article',
-              params: {'articleId': articleId},
+            return BlocProvider(
+              create: (context) => ArticlesCubit(
+                ServiceLocator().networkRepository,
+              )..loadArticle(articleId),
+              child: ArticleScreen(articleId: articleId),
             );
           },
         ),
@@ -183,9 +191,11 @@ class AppRouter {
           path: Routes.articleAnalysis,
           builder: (context, state) {
             final articleId = state.pathParameters['articleId'] ?? '';
-            return PlaceholderScreen(
-              routeName: 'Article Analysis',
-              params: {'articleId': articleId},
+            return BlocProvider(
+              create: (context) => ArticlesCubit(
+                ServiceLocator().networkRepository,
+              )..analyzeArticle(articleId),
+              child: ArticleAnalysisScreen(articleId: articleId),
             );
           },
         ),
