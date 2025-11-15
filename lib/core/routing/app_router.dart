@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'route_names.dart';
 import 'placeholder_screen.dart';
+import '../../presentation/auth/screens/sign_in_screen.dart';
+import '../../presentation/auth/screens/sign_up_screen.dart';
+import '../../presentation/main/screens/main_screen.dart';
 
 /// Configures all app routes using go_router
 class AppRouter {
@@ -12,23 +15,17 @@ class AppRouter {
         // Main
         GoRoute(
           path: Routes.main,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Main Screen',
-          ),
+          builder: (context, state) => const MainScreen(),
         ),
 
         // Auth
         GoRoute(
           path: Routes.signIn,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Sign In',
-          ),
+          builder: (context, state) => const SignInScreen(),
         ),
         GoRoute(
           path: Routes.signUp,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Sign Up',
-          ),
+          builder: (context, state) => const SignUpScreen(),
         ),
 
         // FlashCards
