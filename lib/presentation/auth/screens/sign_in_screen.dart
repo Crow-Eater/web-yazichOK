@@ -64,7 +64,7 @@ class _SignInContentState extends State<_SignInContent> {
         listener: (context, state) {
           if (state is AuthAuthenticated) {
             // Navigate to main screen on successful authentication
-            context.go('/main');
+            context.go('/');
           } else if (state is AuthError) {
             // Show error message
             ScaffoldMessenger.of(context).showSnackBar(

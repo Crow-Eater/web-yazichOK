@@ -6,8 +6,8 @@ class Routes {
   static const String main = '/';
 
   // Auth
-  static const String signIn = '/auth/signin';
-  static const String signUp = '/auth/signup';
+  static const String signIn = '/signin';
+  static const String signUp = '/signup';
 
   // FlashCards
   static const String flashcards = '/flashcards';

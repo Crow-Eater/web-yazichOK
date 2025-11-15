@@ -91,7 +91,7 @@ class _SignUpContentState extends State<_SignUpContent> {
         listener: (context, state) {
           if (state is AuthAuthenticated) {
             // Navigate to main screen on successful registration
-            context.go('/main');
+            context.go('/');
           } else if (state is AuthError) {
             // Show error message
             ScaffoldMessenger.of(context).showSnackBar(
