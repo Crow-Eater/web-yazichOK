@@ -19,6 +19,11 @@ import '../../presentation/learn/screens/listening_practice_screen.dart';
 import '../../presentation/learn/cubit/grammar_topics_cubit.dart';
 import '../../presentation/learn/cubit/test_cubit.dart';
 import '../../presentation/learn/cubit/listening_cubit.dart';
+import '../../presentation/speaking/screens/speaking_topics_screen.dart';
+import '../../presentation/speaking/screens/recording_screen.dart';
+import '../../presentation/speaking/screens/speaking_assessment_screen.dart';
+import '../../presentation/speaking/screens/speaking_results_screen.dart';
+import '../../presentation/speaking/cubit/speech_cubit.dart';
 import '../../core/di/service_locator.dart';
 
 /// Configures all app routes using go_router
@@ -124,26 +129,30 @@ class AppRouter {
         // Speaking
         GoRoute(
           path: Routes.speakingTopics,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Speaking Topics',
+          builder: (context, state) => BlocProvider(
+            create: (context) => SpeechCubit(
+              ServiceLocator().networkRepository,
+              ServiceLocator().recorderManager,
+            )..loadTopics(),
+            child: const SpeakingTopicsScreen(),
           ),
         ),
         GoRoute(
           path: Routes.recording,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Recording',
-          ),
+          builder: (context, state) => const RecordingScreen(),
         ),
         GoRoute(
           path: Routes.assessment,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Speaking Assessment',
-          ),
+          builder: (context, state) => const SpeakingAssessmentScreen(),
         ),
         GoRoute(
           path: Routes.speakingResults,
-          builder: (context, state) => const PlaceholderScreen(
-            routeName: 'Speaking Results',
+          builder: (context, state) => BlocProvider(
+            create: (context) => SpeechCubit(
+              ServiceLocator().networkRepository,
+              ServiceLocator().recorderManager,
+            )..loadResultsHistory(),
+            child: const SpeakingResultsScreen(),
           ),
         ),
 
