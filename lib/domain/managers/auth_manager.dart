@@ -7,7 +7,7 @@ abstract class AuthManager {
   Future<User> signIn(String email, String password);
 
   /// Sign up with email and password
-  Future<User> signUp(String email, String password);
+  Future<User> signUp(String email, String password, {String? fullName});
 
   /// Sign out current user
   Future<void> signOut();

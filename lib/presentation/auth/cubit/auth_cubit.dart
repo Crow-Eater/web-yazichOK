@@ -38,10 +38,10 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   /// Sign up with email and password
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(String email, String password, {String? fullName}) async {
     try {
       emit(const AuthLoading());
-      final user = await _authManager.signUp(email, password);
+      final user = await _authManager.signUp(email, password, fullName: fullName);
       emit(AuthAuthenticated(user));
     } catch (e) {
       // Keep error state - UI will handle transition

@@ -85,6 +85,7 @@ class _MainContent extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.notifications_outlined),
                         onPressed: () {},
+                        tooltip: 'View notifications',
                       ),
                       const SizedBox(width: 16),
                     ],

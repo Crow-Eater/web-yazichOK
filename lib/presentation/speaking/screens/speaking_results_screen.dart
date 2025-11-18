@@ -138,6 +138,7 @@ class SpeakingResultsScreen extends StatelessWidget {
                         final topic = state.topicMap[result.topicId];
 
                         return ResultsHistoryItem(
+                          key: ValueKey(result.id),
                           result: result,
                           topicTitle: topic?.title ?? 'Unknown Topic',
                           onTap: () {

@@ -144,6 +144,7 @@ class _SpeakingTopicsScreenState extends State<SpeakingTopicsScreen> {
                       itemBuilder: (context, index) {
                         final topic = state.topics[index];
                         return TopicCard(
+                          key: ValueKey(topic.id),
                           topic: topic,
                           onTap: () {
                             context.read<SpeechCubit>().selectTopic(topic);
