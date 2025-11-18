@@ -32,20 +32,20 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await _authManager.signIn(email, password);
       emit(AuthAuthenticated(user));
     } catch (e) {
+      // Keep error state - UI will handle transition
       emit(AuthError(e.toString().replaceAll('Exception: ', '')));
-      emit(const AuthUnauthenticated());
     }
   }
 
   /// Sign up with email and password
-  Future<void> signUp(String email, String password, {String? fullName}) async {
+  Future<void> signUp(String email, String password) async {
     try {
       emit(const AuthLoading());
       final user = await _authManager.signUp(email, password);
       emit(AuthAuthenticated(user));
     } catch (e) {
+      // Keep error state - UI will handle transition
       emit(AuthError(e.toString().replaceAll('Exception: ', '')));
-      emit(const AuthUnauthenticated());
     }
   }
 
@@ -55,6 +55,7 @@ class AuthCubit extends Cubit<AuthState> {
       await _authManager.signOut();
       emit(const AuthUnauthenticated());
     } catch (e) {
+      // Keep error state - UI will handle it
       emit(AuthError(e.toString().replaceAll('Exception: ', '')));
     }
   }
