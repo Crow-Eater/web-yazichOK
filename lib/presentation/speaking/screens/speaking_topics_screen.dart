@@ -26,10 +26,7 @@ class _SpeakingTopicsScreenState extends State<SpeakingTopicsScreen> {
           currentState is SpeechTopicsLoading ||
           currentState is SpeechTopicsLoaded ||
           currentState is SpeechError) {
-        print('DEBUG: SpeakingTopicsScreen loading topics (state: ${currentState.runtimeType})');
         context.read<SpeechCubit>().loadTopics();
-      } else {
-        print('DEBUG: SpeakingTopicsScreen skipping loadTopics (state: ${currentState.runtimeType})');
       }
     });
   }
@@ -147,6 +144,7 @@ class _SpeakingTopicsScreenState extends State<SpeakingTopicsScreen> {
                       itemBuilder: (context, index) {
                         final topic = state.topics[index];
                         return TopicCard(
+                          key: ValueKey(topic.id),
                           topic: topic,
                           onTap: () {
                             context.read<SpeechCubit>().selectTopic(topic);

@@ -155,9 +155,21 @@ class ListeningCubit extends Cubit<ListeningState> {
   }
 
   Future<void> _cancelSubscriptions() async {
-    await _positionSubscription?.cancel();
-    await _durationSubscription?.cancel();
-    await _playingSubscription?.cancel();
+    try {
+      await _positionSubscription?.cancel();
+    } catch (e) {
+      // Ignore errors during cleanup
+    }
+    try {
+      await _durationSubscription?.cancel();
+    } catch (e) {
+      // Ignore errors during cleanup
+    }
+    try {
+      await _playingSubscription?.cancel();
+    } catch (e) {
+      // Ignore errors during cleanup
+    }
     _positionSubscription = null;
     _durationSubscription = null;
     _playingSubscription = null;
@@ -166,7 +178,12 @@ class ListeningCubit extends Cubit<ListeningState> {
   @override
   Future<void> close() async {
     await _cancelSubscriptions();
-    _audioManager.dispose();
+    // Stop playback but don't dispose shared AudioManager (managed by ServiceLocator)
+    try {
+      await _audioManager.pause();
+    } catch (e) {
+      // Ignore errors during cleanup
+    }
     return super.close();
   }
 }

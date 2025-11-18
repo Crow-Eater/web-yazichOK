@@ -57,6 +57,11 @@ class ServiceLocator {
     }
     audioManager.dispose();
     recorderManager.dispose();
+
+    // Dispose singleton cubit to prevent memory leaks
+    if (_isInitialized) {
+      _speechCubit.close();
+    }
   }
 }
 

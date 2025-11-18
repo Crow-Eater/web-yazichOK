@@ -90,7 +90,7 @@ class MockAuthManager implements AuthManager {
   }
 
   @override
-  Future<User> signUp(String email, String password) async {
+  Future<User> signUp(String email, String password, {String? fullName}) async {
     await _simulateDelay();
 
     if (_users.containsKey(email)) {
@@ -102,7 +102,7 @@ class MockAuthManager implements AuthManager {
     final user = User(
       id: 'user-${email.hashCode}',
       email: email,
-      displayName: email.split('@').first,
+      displayName: fullName ?? email.split('@').first,
     );
 
     _currentUser = user;

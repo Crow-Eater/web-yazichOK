@@ -117,6 +117,7 @@ class FlashCardsScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final group = state.groups[index];
                 return GroupListItem(
+                  key: ValueKey(group.id),
                   group: group,
                   onTap: () {
                     context.push('${Routes.flashcards}/group/${group.id}');

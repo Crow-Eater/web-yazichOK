@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:yazich_ok/core/routing/route_names.dart';
 import 'package:yazich_ok/presentation/speaking/cubit/speech_cubit.dart';
 import 'package:yazich_ok/presentation/speaking/cubit/speech_state.dart';
 import 'package:yazich_ok/presentation/speaking/widgets/assessment_results_card.dart';
@@ -20,7 +21,6 @@ class SpeakingAssessmentScreen extends StatelessWidget {
       ),
       body: BlocBuilder<SpeechCubit, SpeechState>(
         builder: (context, state) {
-          print('DEBUG: AssessmentScreen building with state: ${state.runtimeType}');
           if (state is SpeechAssessmentProcessing) {
             return Center(
               child: Column(
@@ -121,10 +121,8 @@ class SpeakingAssessmentScreen extends StatelessWidget {
                           child: ElevatedButton.icon(
                             onPressed: () {
                               context.read<SpeechCubit>().backToTopics();
-                              // Pop until back to topics screen
-                              while (context.canPop()) {
-                                context.pop();
-                              }
+                              // Navigate directly to topics screen
+                              context.go(Routes.speakingTopics);
                             },
                             icon: const Icon(Icons.home),
                             label: const Text('Back to Topics'),

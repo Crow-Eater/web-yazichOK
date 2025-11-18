@@ -26,14 +26,30 @@ class RecordingScreen extends StatelessWidget {
       ),
       body: BlocConsumer<SpeechCubit, SpeechState>(
         listenWhen: (previous, current) {
-          // Only listen when transitioning TO SpeechAssessmentProcessing
-          return current is SpeechAssessmentProcessing && previous is! SpeechAssessmentProcessing;
+          // Listen for navigation to assessment or invalid states
+          if (current is SpeechAssessmentProcessing && previous is! SpeechAssessmentProcessing) {
+            return true;
+          }
+          // Listen for invalid states (not recording-related)
+          if (current is! SpeechRecordingIdle &&
+              current is! SpeechRecording &&
+              current is! SpeechRecordingStopped &&
+              current is! SpeechError) {
+            return true;
+          }
+          return false;
         },
         listener: (context, state) {
           // Navigate to assessment screen when recording is submitted
           if (state is SpeechAssessmentProcessing) {
-            print('DEBUG: Navigating to assessment screen');
             context.push(Routes.assessment);
+          }
+          // Navigate back if in invalid state
+          else if (state is! SpeechRecordingIdle &&
+                   state is! SpeechRecording &&
+                   state is! SpeechRecordingStopped &&
+                   state is! SpeechError) {
+            context.pop();
           }
         },
         builder: (context, state) {
@@ -73,13 +89,10 @@ class RecordingScreen extends StatelessWidget {
             );
           }
 
+          // Fallback for invalid states (should be handled by listener)
           if (state is! SpeechRecordingIdle &&
               state is! SpeechRecording &&
               state is! SpeechRecordingStopped) {
-            // Redirect back if in wrong state
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              context.pop();
-            });
             return const SizedBox.shrink();
           }
 
