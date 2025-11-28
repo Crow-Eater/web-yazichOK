@@ -74,7 +74,7 @@ class FlashCardsCubit extends Cubit<FlashCardsState> {
       return await _networkRepository.getWordsForGroup(groupId);
     } catch (e) {
       emit(FlashCardsError('Failed to load words: ${e.toString()}'));
-      return [];
+      rethrow; // Let caller handle the error
     }
   }
 }

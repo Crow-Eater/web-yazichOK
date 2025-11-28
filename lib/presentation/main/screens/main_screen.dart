@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/di/service_locator.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/theme/breakpoints.dart';
 import '../../auth/cubit/auth_cubit.dart';
 import '../../auth/cubit/auth_state.dart';
 
@@ -12,10 +12,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(sl.authManager),
-      child: const _MainContent(),
-    );
+    // AuthCubit is already provided by AppShell
+    return const _MainContent();
   }
 }
 
@@ -87,6 +85,7 @@ class _MainContent extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.notifications_outlined),
                         onPressed: () {},
+                        tooltip: 'View notifications',
                       ),
                       const SizedBox(width: 16),
                     ],
@@ -115,7 +114,6 @@ class _MainContent extends StatelessWidget {
                                 icon: Icons.mic,
                                 gradient: AppTheme.blueGradient,
                                 onTap: () {
-                                  print('DEBUG: Speech Practice card tapped, navigating to /speaking/topics');
                                   context.push('/speaking/topics');
                                 },
                               ),
@@ -171,7 +169,7 @@ class _MainContent extends StatelessWidget {
             ),
 
             // Weekly Progress Sidebar (only show on larger screens)
-            if (MediaQuery.of(context).size.width > 1024)
+            if (MediaQuery.of(context).size.width > Breakpoints.desktop)
               Container(
                 width: 320,
                 decoration: BoxDecoration(

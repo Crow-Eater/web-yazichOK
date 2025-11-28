@@ -93,10 +93,10 @@ class SpeakingResultsScreen extends StatelessWidget {
 
             // Calculate statistics
             final avgScore = state.results.isNotEmpty
-                ? state.results
+                ? (state.results
                         .map((r) => r.overallScore)
-                        .reduce((a, b) => a + b) ~/
-                    state.results.length
+                        .reduce((a, b) => a + b) /
+                    state.results.length).round()
                 : 0;
 
             final totalAttempts = state.results.length;
@@ -138,6 +138,7 @@ class SpeakingResultsScreen extends StatelessWidget {
                         final topic = state.topicMap[result.topicId];
 
                         return ResultsHistoryItem(
+                          key: ValueKey(result.id),
                           result: result,
                           topicTitle: topic?.title ?? 'Unknown Topic',
                           onTap: () {
